@@ -58,3 +58,20 @@ Vert* Read_Input_Graph(char* name, int *VectorLength){
     }
     return toReturn;
 }
+
+/* This function receives an array of Vertices and print them in the terminal */
+void Print_Graph(Vert* toPrint,int size){
+    /* Iterates on every vertice of the argument array */
+    for(int i=0 ; i < size;i++){
+        /* Print it's "id" */
+        printf("%d  ->",toPrint[i].id);
+
+        /* Print the vertices that are conecting to this vertice */
+        for(int j=0 ;j<toPrint[i].adj->tamanho;j++){
+            Edge* reading;
+            reading = AcessaElemento(toPrint[i].adj,j);
+            printf("\t|%d: %d\n", reading->path[1], reading->cost);
+        }
+        printf("\n");
+    }
+}
