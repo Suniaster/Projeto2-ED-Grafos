@@ -1,4 +1,9 @@
 #include "Lista.h"
+/* Defining Constants */
+#define ORIGIN 0
+#define DESTINATION 1
+
+/* Defining the Data structure */
 #ifndef GRAFO
 #define GRAFO
 
@@ -8,9 +13,10 @@ typedef struct Vertice{
 }Vert;
 
 typedef struct Edge{
-    int weight;               // Weight of this edge
-    Vert path[2];             // Variable to store the vertices that this Edge is linking;
+    int cost;                 // Weight of this edge
+    int path[2];              // Variable to store the vertices that this Edge is linking;
 }Edge;
 
+Vert* Read_Input_Graph(char* name, int *VectorLength);
 
 #endif
