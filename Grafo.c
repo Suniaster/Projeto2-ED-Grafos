@@ -56,6 +56,7 @@ Vert* Read_Input_Graph(char* name, int *VectorLength){
             InsereFinal(toReturn[origin].adj, newEdge);
         }
     }
+    fclose(toRead);
     return toReturn;
 }
 
@@ -113,4 +114,11 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
         totalCost += DFS(toSearch, visited, willSearch->path[DESTINATION], 0);
     } 
     return totalCost;
+}
+/* Function to Liberate data allocated on the graph */
+void Free_Graph(Vert* toLiberate, int size){
+    for(int iterator=0; iterator < size; iterator++){
+        FreeLista(toLiberate[iterator].adj);
+    }
+    free(toLiberate);
 }

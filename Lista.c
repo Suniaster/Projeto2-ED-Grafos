@@ -63,9 +63,9 @@ void* RemoveInicio(Lista* aRemover){
         printf("Tentando remover de Fila Vazia\n");
         return NULL;
     }
-    removida = aRemover->inicio->prox;
-    aRemover->inicio->prox=aRemover->inicio->prox->prox;
-    infReturn = removida->info;
+    removida = aRemover->inicio;
+    aRemover->inicio=aRemover->inicio->prox;
+    infReturn = aRemover->inicio->info;
 
     free(removida);
     aRemover->tamanho--;
@@ -104,7 +104,6 @@ int ProcuraRef(Lista* aProcurar, void* procurando){
 }
 
 void FreeLista(Lista* aLiberar){
-    void* infFree;
     while(!ListaVazia(aLiberar)){
         free(RemoveInicio(aLiberar));
     }

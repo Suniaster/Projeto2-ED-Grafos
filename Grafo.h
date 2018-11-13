@@ -26,4 +26,5 @@ void Print_Graph(Vert* toPrint,int size);
 /* Algorithms */
 int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);
 
+void Free_Graph(Vert* toLiberate, int size);
 #endif
