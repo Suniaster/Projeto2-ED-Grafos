@@ -85,13 +85,15 @@ void Print_Graph(Vert* toPrint,int size){
         -> A integer that represents what vertice is being searched "searching"
         -> ????
 */
-void DFS(Vert* toSearch, int* visited, int searching, const int numberOfVertices){
+void DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
     /* Mark as Visted when pass through this particular vertice */
     visited[searching] = VISITED;
     printf("%d\n", toSearch[searching].id);
 
     /* For each one of the connections this vertice have with other vertices */
-    for(int connection = 0 ;connection < toSearch[searching].adj->tamanho ; connection++){
+    int connection;
+    for(int iterator = 0 ;iterator < toSearch[searching].adj->tamanho ; iterator++){
+        connection = (startingConnection + iterator)%toSearch[searching].adj->tamanho;
         Edge* willSearch;
         willSearch = AcessaElemento(toSearch[searching].adj, connection);
         /* If the path->cost equal to 0, the path actually don't exist */
@@ -101,6 +103,6 @@ void DFS(Vert* toSearch, int* visited, int searching, const int numberOfVertices
         }
 
         /* Search again in the first found valid connection */
-        DFS(toSearch, visited, willSearch->path[DESTINATION], numberOfVertices);
+        DFS(toSearch, visited, willSearch->path[DESTINATION], 0);
     }
 }
