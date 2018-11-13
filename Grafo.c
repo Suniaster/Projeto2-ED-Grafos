@@ -80,15 +80,17 @@ void Print_Graph(Vert* toPrint,int size){
     This function find the first valid path that connect some certain vertice to all others.
     Take as parameter:
         -> A vector of vertices that contains all the graph. "toSearch"
-        -> a vector of integers that has the same lenght of the vector of vertices "visited"
+        -> A vector of integers that has the same lenght of the vector of vertices "visited"
             - It is used for store if some vertice was visited or not
-        -> A integer that represents what vertice is being searched "searching"
-        -> ????
+        -> An integer that represents what vertice is being searched "searching"
+        -> An integer to change between starting paths in search "startingConnection"
+    Returns the totalCost of taking this path.
 */
-void DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
+int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
     /* Mark as Visted when pass through this particular vertice */
     visited[searching] = VISITED;
     printf("%d\n", toSearch[searching].id);
+    int totalCost = 0 ;
 
     /* For each one of the connections this vertice have with other vertices */
     int connection;
@@ -103,6 +105,8 @@ void DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
         }
 
         /* Search again in the first found valid connection */
-        DFS(toSearch, visited, willSearch->path[DESTINATION], 0);
-    }
+        totalCost += willSearch->cost;
+        totalCost += DFS(toSearch, visited, willSearch->path[DESTINATION], 0);
+    } 
+    return totalCost;
 }

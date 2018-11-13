@@ -24,6 +24,6 @@ Vert* Read_Input_Graph(char* name, int *VectorLength);
 void Print_Graph(Vert* toPrint,int size);
 
 /* Algorithms */
-void DFS(Vert* toSearch, int* visited, int searching,  int startingConnection);
+int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);
 
 #endif
