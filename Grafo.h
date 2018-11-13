@@ -21,4 +21,5 @@ typedef struct Edge{
 Vert* Read_Input_Graph(char* name, int *VectorLength);
 void Print_Graph(Vert* toPrint,int size);
 
+void Free_Graph(Vert* toLiberate, int size);
 #endif
