@@ -90,22 +90,26 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
     /* Mark as Visted when pass through this particular vertice */
     visited[searching] = VISITED;
     printf("%d\n", toSearch[searching].id);
+
+    /* Variable to return the total cost of using the path it will create */
     int totalCost = 0 ;
 
     /* For each one of the connections this vertice have with other vertices */
     int connection;
     for(int iterator = 0 ;iterator < toSearch[searching].adj->tamanho ; iterator++){
+        
         connection = (startingConnection + iterator)%toSearch[searching].adj->tamanho;
         Edge* willSearch;
         willSearch = AcessaElemento(toSearch[searching].adj, connection);
+
         /* If the path->cost equal to 0, the path actually don't exist */
         /* If the previous statement is true or the vertice was already visited, pass to next vertice */
         if(willSearch->cost == 0 || visited[willSearch->path[DESTINATION]] == VISITED){
             continue;
         }
+        totalCost += willSearch->cost;
 
         /* Search again in the first found valid connection */
-        totalCost += willSearch->cost;
         totalCost += DFS(toSearch, visited, willSearch->path[DESTINATION], 0);
     } 
     return totalCost;
