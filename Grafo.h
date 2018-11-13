@@ -2,6 +2,8 @@
 /* Defining Constants */
 #define ORIGIN 0
 #define DESTINATION 1
+#define VISITED 1
+#define NOT_VISITED 0
 
 /* Defining the Data structure */
 #ifndef GRAFO
@@ -20,5 +22,8 @@ typedef struct Edge{
 /* Input and Output Functions*/
 Vert* Read_Input_Graph(char* name, int *VectorLength);
 void Print_Graph(Vert* toPrint,int size);
+
+/* Algorithms */
+void DFS(Vert* toSearch, int* visited, int searching, const int numberOfVertices);
 
 #endif

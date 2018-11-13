@@ -75,3 +75,32 @@ void Print_Graph(Vert* toPrint,int size){
         printf("\n");
     }
 }
+
+/*  Depth-Fisrt-Search:
+    This function find the first valid path that connect some certain vertice to all others.
+    Take as parameter:
+        -> A vector of vertices that contains all the graph. "toSearch"
+        -> a vector of integers that has the same lenght of the vector of vertices "visited"
+            - It is used for store if some vertice was visited or not
+        -> A integer that represents what vertice is being searched "searching"
+        -> ????
+*/
+void DFS(Vert* toSearch, int* visited, int searching, const int numberOfVertices){
+    /* Mark as Visted when pass through this particular vertice */
+    visited[searching] = VISITED;
+    printf("%d\n", toSearch[searching].id);
+
+    /* For each one of the connections this vertice have with other vertices */
+    for(int connection = 0 ;connection < toSearch[searching].adj->tamanho ; connection++){
+        Edge* willSearch;
+        willSearch = AcessaElemento(toSearch[searching].adj, connection);
+        /* If the path->cost equal to 0, the path actually don't exist */
+        /* If the previous statement is true or the vertice was already visited, pass to next vertice */
+        if(willSearch->cost == 0 || visited[willSearch->path[DESTINATION]] == VISITED){
+            continue;
+        }
+
+        /* Search again in the first found valid connection */
+        DFS(toSearch, visited, willSearch->path[DESTINATION], numberOfVertices);
+    }
+}
