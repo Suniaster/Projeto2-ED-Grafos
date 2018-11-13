@@ -115,6 +115,18 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
     } 
     return totalCost;
 }
+
+/*  A function that takes a List of Edges as input and return the sum of the costs */
+int Path_Cost(Lista* toCalculate){
+    int totalCost = 0;
+    for(int index=0; index < toCalculate->tamanho; index++){
+        Edge* evaluating;
+        evaluating = AcessaElemento(toCalculate, index);
+        totalCost += evaluating->cost;
+    }
+    return totalCost;
+}
+
 /* Function to Liberate data allocated on the graph */
 void Free_Graph(Vert* toLiberate, int size){
     for(int iterator=0; iterator < size; iterator++){
