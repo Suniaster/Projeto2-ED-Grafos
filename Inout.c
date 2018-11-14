@@ -1,5 +1,6 @@
 #include "Grafo.h"
 #include <stdio.h>
+#include <stdlib.h>
 /*  Function to read input file.
     It receives a string with the name of the file in it.
     The function alocate space the necessary to store all the data that the input file is passing.
