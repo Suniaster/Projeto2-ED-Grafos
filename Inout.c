@@ -10,7 +10,7 @@
     The parameter "VectorLength" returns by reference the lentgh of the array read in the function.
     The parameter allEdges return by reference a list with all edges without repetitions, A-B = B-A.
 */
-Vert* Read_Input_Graph(char* name, int *VectorLength, Lista** allEdges){
+Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges){
 
     FILE* toRead;               // Variable to read input file
 

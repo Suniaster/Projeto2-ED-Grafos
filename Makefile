@@ -1,7 +1,7 @@
-all: teste.o Lista.o Grafo.o Inout.o 
-	gcc -g teste.o Lista.o Grafo.o Inout.o
-teste.o: teste.c
-	gcc -g -c teste.c
+all: main.o Lista.o Grafo.o Inout.o 
+	gcc -g main.o Lista.o Grafo.o Inout.o -o mst
+main.o: main.c
+	gcc -g -c main.c
 Lista.o: Lista.c
 	gcc -g -c Lista.c
 Grafo.o: Grafo.c
@@ -9,4 +9,4 @@ Grafo.o: Grafo.c
 Inout.o: Inout.c
 	gcc -g -c Inout.c
 clean: 
-	rm teste.o Lista.o Grafo.o Inout.o a.out
+	rm main.o Lista.o Grafo.o Inout.o mst
