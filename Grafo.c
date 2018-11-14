@@ -187,7 +187,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
 
         /* Update key value of all adjacent vertices of toAdd. To update the key values, 
         iterate through all adjacent vertices. For every adjacent vertex n, if weight of 
-        edge of this neighbor is less than the previous key value of neighbot, update the key value as weight of the edge to this neighbor
+        edge of this neighbor is less than the previous key value of neighbor, update the key value as weight of the edge to this neighbor
         */
         for(int n=0; n<toSearch[toAdd].adj->tamanho;n++){
             neighbors = AcessaElemento(toSearch[toAdd].adj,n);
