@@ -27,6 +27,7 @@ typedef struct Edge{
 /* Input and Output Functions*/
 Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges);
 void Print_Graph(Vert* toPrint,int size);
+void Print_Output_File(const char* name, Lista* toPrint);
 
 /* Algorithms */
 int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);

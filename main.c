@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]){
     printf("Quantidade de MST's diferentes: NULL\n");
 
     /* Priting information on output file */
-
+    Print_Output_File("output.txt", bestPath);
 
     /* Freeing memory alocated */
     Free_Graph(graph, graphSize);

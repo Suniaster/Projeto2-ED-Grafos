@@ -90,3 +90,38 @@ void Print_Graph(Vert* toPrint,int size){
         printf("\n");
     }
 }
+
+/*  Function to print the file with edges information 
+    Takes as input:
+        -> Name of the file ("name");
+        -> A list of edges to be printed ("toPrint");
+*/
+void Print_Output_File(const char* name, Lista* toPrint){
+
+    /* Opening file to write */
+    FILE* printing;
+    printing = fopen(name, "w");
+
+    /* Ordering elements to print information in order */
+    int swap;
+    Edge* willChange;
+    for(int i=0; i < toPrint->tamanho; i++){
+        willChange = AcessaElemento(toPrint, i);
+        if(willChange->path[ORIGIN] > willChange->path[DESTINATION]){
+            swap = willChange->path[ORIGIN];
+            willChange->path[ORIGIN] =  willChange->path[DESTINATION];
+            willChange->path[DESTINATION] = swap;
+        }
+    }
+
+    /* Priting the information of the edges */
+    Edge* willPrint;
+    for(int i=0; i < toPrint->tamanho; i++){
+        willPrint = AcessaElemento(toPrint, i);
+        fprintf(printing, "%d,%d\n", willPrint->path[ORIGIN], willPrint->path[DESTINATION]);
+    }
+    /* Liberating allocated data */
+
+    /* Closing File */
+    fclose(printing);
+}
