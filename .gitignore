@@ -4,3 +4,7 @@ teste.c
 /Latex/relatorio.synctex.gz
 /Latex/figures/*
 .vscode
+Grafo.o
+Inout.o
+Lista.o
+teste.o

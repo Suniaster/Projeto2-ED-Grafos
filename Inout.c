@@ -7,9 +7,10 @@
     It returns a vector of vertices which every index of it has:
         - An 'id': to identify the origin vertice;
         - An Adjacency List: which contain a list of arrests that indicate the path and the cost of a certain movimentaion in the graph.  
-    The last parameter "VectorLength" returns by reference the lentgh of the array read in the function. 
+    The parameter "VectorLength" returns by reference the lentgh of the array read in the function.
+    The parameter allEdges return by reference a list with all edges without repetitions, A-B = B-A.
 */
-Vert* Read_Input_Graph(char* name, int *VectorLength){
+Vert* Read_Input_Graph(char* name, int *VectorLength, Lista** allEdges){
 
     FILE* toRead;               // Variable to read input file
 
@@ -23,8 +24,13 @@ Vert* Read_Input_Graph(char* name, int *VectorLength){
     fscanf(toRead, "%d", &numberOfVertices);
     *VectorLength = numberOfVertices;
 
+    /* Vector of Vertices to be returned */
     Vert* toReturn;
     toReturn = (Vert*)malloc(numberOfVertices * sizeof(Vert));
+
+    /* Creating a list that will contain all vertices and be returned bu reference */
+    Edge* toInsert;
+    (*allEdges) = CriaLista();
 
     /* For every line in input file:
         -> Save the "id", which works as a identifier, of the vertice;
@@ -53,6 +59,15 @@ Vert* Read_Input_Graph(char* name, int *VectorLength){
 
             /* Inserting into the Adjency list*/
             InsereFinal(toReturn[origin].adj, newEdge);
+
+            /* Conditional to remove the repetitions */
+            if(origin > destination){
+                toInsert = (Edge*)malloc(sizeof(Edge));
+                toInsert->cost = pathCost;
+                toInsert->path[ORIGIN] = origin;
+                toInsert->path[DESTINATION] = destination;
+                InsereFinal((*allEdges), toInsert);
+            }  
         }
     }
     fclose(toRead);
