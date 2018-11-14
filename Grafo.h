@@ -1,5 +1,5 @@
 #include "Lista.h"
-#include "string.h"
+#include <string.h>
 /* Defining Constants */
 #define ORIGIN 0
 #define DESTINATION 1
