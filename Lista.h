@@ -35,5 +35,6 @@ void* RemoveFinal(Lista* aRemover);
 
 int ProcuraRef(Lista* aProcurar, void* procurando);
 void FreeLista(Lista* aLiberar);
+void EmptyList(Lista* toEmpty);
 
 #endif

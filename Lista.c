@@ -110,3 +110,11 @@ void FreeLista(Lista* aLiberar){
     free(aLiberar->inicio);
     free(aLiberar);
 }
+
+void EmptyList(Lista* toEmpty){
+    while(!ListaVazia(toEmpty)){
+        RemoveInicio(toEmpty);
+    }
+    free(toEmpty->inicio);
+    free(toEmpty);
+}
