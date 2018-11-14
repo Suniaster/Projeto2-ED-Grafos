@@ -158,6 +158,9 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
     Vert* isFound;
     Vert* newInPath;
     Edge* neighbors;
+    Edge* PATH;
+    Edge* addPATH;
+    Lista* toReturn = CriaLista();
     int hasAlready;
     int toAdd;
     int minKey=INF; 
@@ -185,6 +188,37 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
         memcpy(newInPath, &toSearch[toAdd], sizeof(Vert));
         InsereFinal(pathTaken, newInPath);
 
+
+        /*  To know what Edge is been used pass through vertices:
+            Use the last vertex that was put on the path List
+            "newInpPath" to:
+            For each adjacent vertex of him, find the one that has minimun value and
+            is already on the path list.
+            This way, we can know from what vertex the last vertex that was put
+            in the path list come from
+         */
+        minKey = INF;
+        for(int i=0;i< newInPath->adj->tamanho;i++){
+            neighbors = AcessaElemento(newInPath->adj, i);
+            hasAlready = False;
+
+            for(int j=0;j<pathTaken->tamanho;j++){
+                isFound = AcessaElemento(pathTaken,j);
+                if(neighbors->path[DESTINATION] == isFound->id)hasAlready=True;
+            }
+
+            if(neighbors->cost<minKey && hasAlready == True){
+                PATH = neighbors;
+                minKey = neighbors->cost;
+            }
+        }
+        // If the last block of code has find what it was suposed to, insert that Edge in a list to return
+        if(minKey != INF){
+            addPATH=(Edge*)malloc(sizeof(Edge));
+            memcpy(addPATH, PATH, sizeof(Edge));
+            InsereFinal(toReturn, addPATH);
+        }
+
         /* Update key value of all adjacent vertices of toAdd. To update the key values, 
         iterate through all adjacent vertices. For every adjacent vertex n, if weight of 
         edge of this neighbor is less than the previous key value of neighbor, update the key value as weight of the edge to this neighbor
@@ -198,6 +232,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
         }
 
     }
+    FreeLista(pathTaken);
     free(mstKeys);
-    return pathTaken;
+    return toReturn;
 }
