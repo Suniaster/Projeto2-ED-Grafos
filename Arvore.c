@@ -303,19 +303,20 @@ void* ProcuraAVL(Tnode *N, int aProcurar){
     }
     return N->inf;
 }
-
+int o =0;
 /* Retorna o i-esimo elemento ordenaro na arvore;
 */
-void* VoltaIAVL(Tnode* N, int iesimo){
-    iesimo--;
-    if(iesimo <= 0){
-        return N->inf;
-    }    
-    if(N==NULL)return NULL;
-    return VoltaIAVL(N->left, iesimo);
-    return VoltaIAVL(N->right, iesimo);
-
-    
+void VoltaIAVL(Tnode* N, int *iesimo, void** toReturn){
+    o++;
+    printf("%d\n", o);
+    if(N==NULL || *iesimo <= 0){
+        return ;
+    }
+    VoltaIAVL(N->left, iesimo, toReturn);
+    if(*iesimo <= 0)return;
+    *iesimo-=1;
+    (*toReturn) = N->inf;
+    VoltaIAVL(N->right, iesimo, toReturn);
 }
 /*  Liberação dos dados alocados pela árvore.
     As estruturas que nela estão armazenadas também são

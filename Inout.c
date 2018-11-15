@@ -123,8 +123,10 @@ void Print_Output_File(const char* name, Lista* toPrint){
 
 
     /* Priting the information of the edges */
+    int find;
     for(int i=0; i < toPrint->tamanho; i++){
-        
+        find = i+1;
+        VoltaIAVL(Root, &find, &willPrint);
         fprintf(printing, "%d,%d\n", willPrint->path[ORIGIN], willPrint->path[DESTINATION]);
     }
     /* Liberating allocated data */

@@ -11,4 +11,4 @@ Inout.o: Inout.c
 Arvore.o: Arvore.c
 	gcc -g -c Arvore.c
 clean: 
-	rm main.o Lista.o Grafo.o Inout.o mst
+	rm main.o Lista.o Grafo.o Inout.o mst Arvore.o
