@@ -102,9 +102,15 @@ void Print_Output_File(const char* name, Lista* toPrint){
     FILE* printing;
     printing = fopen(name, "w");
 
-    /* Ordering elements to print information in order */
+    /* Auxiliar variables */
     int swap;
     Edge* willChange;
+    Tnode* Root=NULL;
+    Edge* willPrint;
+    int procurando = 0;
+    int* valuesVector = (int*)malloc(toPrint->tamanho*sizeof(int));
+    
+    /* Ordering elements to print information in order */
     for(int i=0; i < toPrint->tamanho; i++){
         willChange = AcessaElemento(toPrint, i);
         if(willChange->path[ORIGIN] > willChange->path[DESTINATION]){
@@ -112,15 +118,17 @@ void Print_Output_File(const char* name, Lista* toPrint){
             willChange->path[ORIGIN] =  willChange->path[DESTINATION];
             willChange->path[DESTINATION] = swap;
         }
+        InsereAVL(&Root, willChange, willChange->path[ORIGIN]);
     }
 
+
     /* Priting the information of the edges */
-    Edge* willPrint;
     for(int i=0; i < toPrint->tamanho; i++){
-        willPrint = AcessaElemento(toPrint, i);
+        
         fprintf(printing, "%d,%d\n", willPrint->path[ORIGIN], willPrint->path[DESTINATION]);
     }
     /* Liberating allocated data */
+    EsvaziaArvore(&Root);
 
     /* Closing File */
     fclose(printing);

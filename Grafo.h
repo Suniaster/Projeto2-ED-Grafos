@@ -1,4 +1,5 @@
 #include "Lista.h"
+#include "Arvore.h"
 #include <string.h>
 /* Defining Constants */
 #define ORIGIN 0
