@@ -1,0 +1,12 @@
+Lista - List
+Tamanho - Length
+InsereInicio - InsertStart
+InsereFinal - InsertEnd
+AcessaElemento - AccessElement
+CriaLista - CreateList
+RemoveInicio - RemoveStart
+RemoveFinal - RemoveEnd
+inicio - head
+fim - tail
+prox - next
+ant - prev

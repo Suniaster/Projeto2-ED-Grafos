@@ -1,46 +1,46 @@
-#ifndef LISTA
-#define LISTA
+#ifndef LIST
+#define LIST
 
 typedef struct doubleLinkedNode{
 
     void* info;
-    int *ordem;
-    struct doubleLinkedNode* prox;
-    struct doubleLinkedNode* ant;
+    int *order;
+    struct doubleLinkedNode* next;
+    struct doubleLinkedNode* prev;
 
 }cel;
 
-typedef struct Lista{
-    int tamanho;
-    cel* inicio;
-    cel* fim;
-}Lista;
+typedef struct List{
+    int length;
+    cel* head;
+    cel* tail;
+}List;
 
-/* Cria Lista Vazia*/
-Lista* CriaLista();
+/* Cria List Vazia*/
+List* CreateList();
 
-/* Confere Estado da Lista */
-int ListaVazia(Lista* Verificando);
+/* Confere Estado da List */
+int ListVazia(List* Verificando);
 
 /* Inserção de elemento */
-void InsereInicio(Lista* aInserir, void* inf);
-void InsereFinal(Lista* aInserir, void* inf);
+void InsertStart(List* aInserir, void* inf);
+void InsertEnd(List* aInserir, void* inf);
 
 /* Acessando Elementos pelo indice */
-void* AcessaElemento(Lista* acessando, int indice);
+void* AccessElement(List* acessando, int indice);
 
 /* Remoção de Elementos */
-void* RemoveInicio(Lista* aRemover);
-void* RemoveFinal(Lista* aRemover);
+void* RemoveStart(List* aRemover);
+void* RemoveEnd(List* aRemover);
 
-/* Lista ordenada */
-void InsereCrescente(Lista* aInserir, void* inf, int* Ordem, int quantidadeDeChaves);
-void* RetiraOrdList(Lista* aRemover);
-void FreeOrdLista(Lista* aLiberar);
+/* List ordenada */
+void InsereCrescente(List* aInserir, void* inf, int* order, int quantidadeDeChaves);
+void* RetiraOrdList(List* aRemover);
+void FreeOrdList(List* aLiberar);
 
 /* Outros métodos úteis */
-int ProcuraRef(Lista* aProcurar, void* procurando);
-void FreeLista(Lista* aLiberar);
-void EmptyList(Lista* toEmpty);
+int ProcuraRef(List* aProcurar, void* procurando);
+void FreeList(List* aLiberar);
+void EmptyList(List* toEmpty);
 
 #endif

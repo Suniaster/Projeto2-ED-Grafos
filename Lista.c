@@ -2,20 +2,20 @@
 #include <stdlib.h>
 #include "Lista.h"
 
-Lista* CriaLista(){
-    Lista* NovaLista;
-    NovaLista = (Lista*)malloc(sizeof(Lista));
+List* CreateList(){
+    List* NovaLista;
+    NovaLista = (List*)malloc(sizeof(List));
 
-    NovaLista->inicio = (cel*)malloc(sizeof(cel));
-    NovaLista->fim=NovaLista->inicio;
-    NovaLista->inicio->prox=NULL;   
-    NovaLista->inicio->ordem = NULL;    
-    NovaLista->tamanho=0;
+    NovaLista->head = (cel*)malloc(sizeof(cel));
+    NovaLista->tail=NovaLista->head;
+    NovaLista->head->next=NULL;   
+    NovaLista->head->order = NULL;    
+    NovaLista->length=0;
     return NovaLista;
 }
 
-int ListaVazia(Lista* Verificando){
-    if(Verificando->inicio==Verificando->fim){
+int ListaVazia(List* Verificando){
+    if(Verificando->head==Verificando->tail){
         return 1;
     }
     else{
@@ -23,58 +23,58 @@ int ListaVazia(Lista* Verificando){
     }
 }
 
-void InsereInicio(Lista* aInserir, void* inf){
+void InsertStart(List* aInserir, void* inf){
     cel* Inserindo = (cel*)malloc(sizeof(cel));
     Inserindo->info = inf;
 
-    Inserindo->prox=aInserir->inicio->prox;
-    aInserir->inicio->prox=Inserindo;
+    Inserindo->next=aInserir->head->next;
+    aInserir->head->next=Inserindo;
 
-    aInserir->tamanho++;
+    aInserir->length++;
 }
 
-void InsereFinal(Lista* aInserir, void* inf){
+void InsertEnd(List* aInserir, void* inf){
     cel* Inserindo = (cel*)malloc(sizeof(cel));
     Inserindo->info = inf;
 
-    aInserir->fim->prox = Inserindo;
-    aInserir->fim=aInserir->fim->prox;
+    aInserir->tail->next = Inserindo;
+    aInserir->tail=aInserir->tail->next;
 
-    aInserir->tamanho++;
+    aInserir->length++;
 }
 
-void* AcessaElemento(Lista* acessando, int indice){
-    if(indice+1 > acessando->tamanho ){
+void* AccessElement(List* acessando, int indice){
+    if(indice+1 > acessando->length ){
         printf("Acessando Local invalido\n");
         return NULL;
     }
     cel* procurando;
-    procurando = acessando->inicio->prox;
+    procurando = acessando->head->next;
     for(int i=0; i < indice ;i++){
-        procurando = procurando->prox;
+        procurando = procurando->next;
     }
 
     return procurando->info;
 }
 
-void* RemoveInicio(Lista* aRemover){
+void* RemoveStart(List* aRemover){
     cel* removida;
     void* infReturn;
     if(ListaVazia(aRemover)){
         printf("Tentando remover de Fila Vazia\n");
         return NULL;
     }
-    removida = aRemover->inicio;
-    aRemover->inicio=aRemover->inicio->prox;
-    infReturn = aRemover->inicio->info;
+    removida = aRemover->head;
+    aRemover->head=aRemover->head->next;
+    infReturn = aRemover->head->info;
 
     free(removida);
-    aRemover->tamanho--;
+    aRemover->length--;
     return infReturn;
 
 }
 
-void* RemoveFinal(Lista* aRemover){
+void* RemoveEnd(List* aRemover){
     cel* removida;
     void* infReturn;
 
@@ -82,102 +82,102 @@ void* RemoveFinal(Lista* aRemover){
         printf("Tentando remover de Fila Vazia\n");
         return NULL;
     }
-    removida = aRemover->fim;
-    aRemover->fim = aRemover->fim->ant;
+    removida = aRemover->tail;
+    aRemover->tail = aRemover->tail->prev;
     infReturn = removida->info;
 
     free(removida);
-    aRemover->tamanho--;
+    aRemover->length--;
     return infReturn;
 
 }
 
-int ProcuraRef(Lista* aProcurar, void* procurando){
+int ProcuraRef(List* aProcurar, void* procurando){
     cel* comparando;
-    comparando = aProcurar->inicio->prox;
-    while(comparando != aProcurar->fim->prox){
+    comparando = aProcurar->head->next;
+    while(comparando != aProcurar->tail->next){
         if(comparando->info == procurando){
             return 1;
         }
-        else comparando = comparando->prox;
+        else comparando = comparando->next;
     }
     return 0;
 }
 
-void FreeLista(Lista* aLiberar){
+void FreeList(List* aLiberar){
     while(!ListaVazia(aLiberar)){
-        free(RemoveInicio(aLiberar));
+        free(RemoveStart(aLiberar));
     }
-    free(aLiberar->inicio);
+    free(aLiberar->head);
     free(aLiberar);
 }
 
-void EmptyList(Lista* toEmpty){
+void EmptyList(List* toEmpty){
     while(!ListaVazia(toEmpty)){
-        RemoveInicio(toEmpty);
+        RemoveStart(toEmpty);
     }
-    free(toEmpty->inicio);
+    free(toEmpty->head);
     free(toEmpty);
 }
 
 
-void* RetiraOrdList(Lista* aRemover){
+void* RetiraOrdList(List* aRemover){
     cel* removida;
     void* infReturn;
-    if(aRemover->tamanho == 0){
+    if(aRemover->length == 0){
         printf("Tentando remover de Fila Vazia\n");
         return NULL;
     }
-    removida = aRemover->inicio;
-    aRemover->inicio = aRemover->inicio->prox;
-    infReturn = aRemover->inicio->info;
+    removida = aRemover->head;
+    aRemover->head = aRemover->head->next;
+    infReturn = aRemover->head->info;
 
-    if(removida->ordem!=NULL) free(removida->ordem);
+    if(removida->order!=NULL) free(removida->order);
     free(removida);
-    aRemover->tamanho--;
+    aRemover->length--;
     return infReturn;
 }
 
-void FreeOrdLista(Lista* aLiberar){
-    while(aLiberar->tamanho > 0){
+void FreeOrdList(List* aLiberar){
+    while(aLiberar->length > 0){
         free(RetiraOrdList(aLiberar));
     }
-    if(aLiberar->inicio->ordem!=NULL) free(aLiberar->inicio->ordem);
-    free(aLiberar->inicio);
+    if(aLiberar->head->order!=NULL) free(aLiberar->head->order);
+    free(aLiberar->head);
     free(aLiberar);
 }
 
-void InsereCrescente(Lista* aInserir, void* inf, int* Ordem, int quantidadeDeChaves){
+void InsereCrescente(List* aInserir, void* inf, int* order, int quantidadeDeChaves){
 
     cel* Inserindo = (cel*)malloc(sizeof(cel));
     Inserindo->info = inf;
-    Inserindo->ordem = (int*)malloc(quantidadeDeChaves*sizeof(int));
-    aInserir->tamanho++;
+    Inserindo->order = (int*)malloc(quantidadeDeChaves*sizeof(int));
+    aInserir->length++;
 
     /* Coping order to be followed */
-    for(int i=0; i < quantidadeDeChaves; i++)Inserindo->ordem[i] = Ordem[i];
+    for(int i=0; i < quantidadeDeChaves; i++)Inserindo->order[i] = order[i];
 
     /* Find the right place to put the new Information */
     cel* confere;
-    confere = aInserir->inicio;
-    if(confere->prox == NULL){
-        Inserindo->prox = NULL;
-        confere->prox = Inserindo;
+    confere = aInserir->head;
+    if(confere->next == NULL){
+        Inserindo->next = NULL;
+        confere->next = Inserindo;
         return;
     }
     
     for(int keyNumber=0; keyNumber < quantidadeDeChaves ;keyNumber++){
-        while(confere->prox != NULL && Ordem[keyNumber] > confere->prox->ordem[keyNumber]){
-            confere = confere->prox;
+        while(confere->next != NULL && order[keyNumber] > confere->next->order[keyNumber]){
+            confere = confere->next;
         }
     }
     
-    if(confere->prox == NULL){
-        Inserindo->prox = confere->prox;
-        confere->prox = Inserindo;
+    if(confere->next == NULL){
+        Inserindo->next = confere->next;
+        confere->next = Inserindo;
         return;
     }
 
-    Inserindo->prox = confere->prox;
-    confere->prox = Inserindo;
+    Inserindo->next = confere->next;
+    confere->next = Inserindo;
 }

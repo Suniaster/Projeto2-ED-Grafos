@@ -13,7 +13,7 @@ int main(int argc, char const *argv[]){
 
     /* Variables to store the data collected */
     Vert* graph;
-    Lista* allEdges;
+    List* allEdges;
     int graphSize;
     int multiplePaths;
 
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]){
 
     /* Using Prim's algorithm to find the first best MST in the graph */
     /* Best path is a list of edges that contain only the necessary edges in the best path */
-    Lista* bestPath;
+    List* bestPath;
     bestPath = MST_Prim(graph, 0, graphSize, &multiplePaths);
 
     /* Calculating the path costs */
@@ -44,8 +44,8 @@ int main(int argc, char const *argv[]){
 
     /* Freeing memory alocated */
     Free_Graph(graph, graphSize);
-    FreeLista(bestPath);
-    FreeLista(allEdges);
+    FreeList(bestPath);
+    FreeList(allEdges);
     
     return 0;
 }

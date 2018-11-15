@@ -10,7 +10,7 @@
     The parameter "VectorLength" returns by reference the lentgh of the array read in the function.
     The parameter allEdges return by reference a list with all edges without repetitions, A-B = B-A.
 */
-Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges){
+Vert* Read_Input_Graph(const char* name, int *VectorLength, List** allEdges){
 
     FILE* toRead;               // Variable to read input file
 
@@ -30,7 +30,7 @@ Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges){
 
     /* Creating a list that will contain all vertices and be returned bu reference */
     Edge* toInsert;
-    (*allEdges) = CriaLista();
+    (*allEdges) = CreateList();
 
     /* For every line in input file:
         -> Save the "id", which works as a identifier, of the vertice;
@@ -39,7 +39,7 @@ Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges){
     */
     for(int origin=0; origin < numberOfVertices; origin++){
         toReturn[origin].id = origin;
-        toReturn[origin].adj = CriaLista();
+        toReturn[origin].adj = CreateList();
         
         /* Iterate for every possible destination */
         for(int destination = 0; destination < numberOfVertices; destination++){
@@ -58,7 +58,7 @@ Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges){
             newEdge->path[DESTINATION] = destination;
 
             /* Inserting into the Adjency list*/
-            InsereFinal(toReturn[origin].adj, newEdge);
+            InsertEnd(toReturn[origin].adj, newEdge);
 
             /* Conditional to remove the repetitions */
             if(origin > destination){
@@ -66,7 +66,7 @@ Vert* Read_Input_Graph(const char* name, int *VectorLength, Lista** allEdges){
                 toInsert->cost = pathCost;
                 toInsert->path[ORIGIN] = origin;
                 toInsert->path[DESTINATION] = destination;
-                InsereFinal((*allEdges), toInsert);
+                InsertEnd((*allEdges), toInsert);
             }  
         }
     }
@@ -82,9 +82,9 @@ void Print_Graph(Vert* toPrint,int size){
         printf("%d  ->",toPrint[i].id);
 
         /* Print the vertices that are conecting to this vertice */
-        for(int j=0 ;j<toPrint[i].adj->tamanho;j++){
+        for(int j=0 ;j<toPrint[i].adj->length;j++){
             Edge* reading;
-            reading = AcessaElemento(toPrint[i].adj,j);
+            reading = AccessElement(toPrint[i].adj,j);
             printf("\t|%d: %d\n", reading->path[1], reading->cost);
         }
         printf("\n");
@@ -96,7 +96,7 @@ void Print_Graph(Vert* toPrint,int size){
         -> Name of the file ("name");
         -> A list of edges to be printed ("toPrint");
 */
-void Print_Output_File(const char* name, Lista* toPrint){
+void Print_Output_File(const char* name, List* toPrint){
 
     /* Opening file to write */
     FILE* printing;
@@ -105,9 +105,9 @@ void Print_Output_File(const char* name, Lista* toPrint){
     /* Ordering elements to print information in order */
     int swap;
     Edge* willChange;
-    Lista* orderedEdges = CriaLista();
-    for(int i=0; i < toPrint->tamanho; i++){
-        willChange = AcessaElemento(toPrint, i);
+    List* orderedEdges = CreateList();
+    for(int i=0; i < toPrint->length; i++){
+        willChange = AccessElement(toPrint, i);
         if(willChange->path[ORIGIN] > willChange->path[DESTINATION]){
             swap = willChange->path[ORIGIN];
             willChange->path[ORIGIN] =  willChange->path[DESTINATION];
@@ -118,13 +118,13 @@ void Print_Output_File(const char* name, Lista* toPrint){
     
     /* Priting the information of the edges */
     Edge* willPrint;
-    for(int i=0; i < toPrint->tamanho; i++){
+    for(int i=0; i < toPrint->length; i++){
         willPrint = RetiraOrdList(orderedEdges);
         fprintf(printing, "%d,%d\n", willPrint->path[ORIGIN], willPrint->path[DESTINATION]);
     }
 
     /* Liberating allocated data */
-    FreeOrdLista(orderedEdges);
+    FreeOrdList(orderedEdges);
 
     /* Closing File */
     fclose(printing);

@@ -22,11 +22,11 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
 
     /* For each one of the connections this vertice have with other vertices */
     int connection;
-    for(int iterator = 0 ;iterator < toSearch[searching].adj->tamanho ; iterator++){
+    for(int iterator = 0 ;iterator < toSearch[searching].adj->length ; iterator++){
         
-        connection = (startingConnection + iterator)%toSearch[searching].adj->tamanho;
+        connection = (startingConnection + iterator)%toSearch[searching].adj->length;
         Edge* willSearch;
-        willSearch = AcessaElemento(toSearch[searching].adj, connection);
+        willSearch = AccessElement(toSearch[searching].adj, connection);
 
         /* If the path->cost equal to 0, the path actually don't exist */
         /* If the previous statement is true or the vertice was already visited, pass to next vertice */
@@ -42,11 +42,11 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
 }
 
 /*  A function that takes a List of Edges as input and return the sum of the costs */
-int Path_Cost(Lista* toCalculate){
+int Path_Cost(List* toCalculate){
     int totalCost = 0;
-    for(int index=0; index < toCalculate->tamanho; index++){
+    for(int index=0; index < toCalculate->length; index++){
         Edge* evaluating;
-        evaluating = AcessaElemento(toCalculate, index);
+        evaluating = AccessElement(toCalculate, index);
         totalCost += evaluating->cost;
     }
     return totalCost;
@@ -55,12 +55,12 @@ int Path_Cost(Lista* toCalculate){
 /* Function to Liberate data allocated on the graph */
 void Free_Graph(Vert* toLiberate, int size){
     for(int iterator=0; iterator < size; iterator++){
-        FreeLista(toLiberate[iterator].adj);
+        FreeList(toLiberate[iterator].adj);
     }
     free(toLiberate);
 }
 
-Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
+List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
 
     /* If the starting parameter is not valid, stop the function*/ 
     if(startPoint > size-1){
@@ -73,8 +73,8 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     for(int i=0;i<size;i++)mstKeys[i]=INF;
     
     /* Variable to store Edges used in the minimun spanning tree path */
-    Lista* pathTaken;
-    pathTaken = CriaLista();
+    List* pathTaken;
+    pathTaken = CreateList();
     
     /* The key of the first entry is 0 */
     mstKeys[startPoint] = 0;
@@ -85,7 +85,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     Edge* neighbors;                    // Auxiliar to iterate through a list of Edges
     Edge* PATH;                         // Used to find the last Edge that was put in the MST
     Edge* addPATH;                      // Stores a copy of PATH variable
-    Lista* toReturn = CriaLista();      // List of Edges to be returned
+    List* toReturn = CreateList();      // List of Edges to be returned
     int hasAlready;                     // Work as Bollean to check an existence of a element in a set
     int toAdd;                          // Store the index of the next vertice to be explored
     int minKey=INF;                     // Necessary to found minimum values
@@ -101,8 +101,8 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         for(int search=0; search< size; search++){
             hasAlready = False;
             /* Check if this path is already i pathTaken */
-            for(int listValues=0;listValues < pathTaken->tamanho;listValues++){
-                isFound = AcessaElemento(pathTaken,listValues);
+            for(int listValues=0;listValues < pathTaken->length;listValues++){
+                isFound = AccessElement(pathTaken,listValues);
                 if(search == isFound->id)hasAlready = True;
             }
             /* Update minimum key */
@@ -116,7 +116,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         /* "Explore the vertex" */
         newInPath = (Vert*)malloc(sizeof(Vert));
         memcpy(newInPath, &toSearch[toAdd], sizeof(Vert));
-        InsereFinal(pathTaken, newInPath);
+        InsertEnd(pathTaken, newInPath);
 
 
         /*  To know what Edge is been used pass through vertices:
@@ -129,12 +129,12 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
          */
         /* "Adding the last added edge to the list that will be returned" */
         minKey = INF;
-        for(int i=0;i< newInPath->adj->tamanho;i++){
-            neighbors = AcessaElemento(newInPath->adj, i);
+        for(int i=0;i< newInPath->adj->length;i++){
+            neighbors = AccessElement(newInPath->adj, i);
             hasAlready = False;
 
-            for(int j=0;j<pathTaken->tamanho;j++){
-                isFound = AcessaElemento(pathTaken,j);
+            for(int j=0;j<pathTaken->length;j++){
+                isFound = AccessElement(pathTaken,j);
                 if(neighbors->path[DESTINATION] == isFound->id)hasAlready=True;
             }
 
@@ -146,7 +146,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         if(minKey != INF){
             addPATH=(Edge*)malloc(sizeof(Edge));
             memcpy(addPATH, PATH, sizeof(Edge));
-            InsereFinal(toReturn, addPATH);
+            InsertEnd(toReturn, addPATH);
         }
 
         /*  Update key value of all adjacent vertices of toAdd. To update the key values, 
@@ -154,14 +154,14 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             edge of this neighbor is less than the previous key value of neighbor, 
             update the key value as weight of the edge to this neighbor
         */
-        for(int n=0; n<toSearch[toAdd].adj->tamanho;n++){
-            neighbors = AcessaElemento(toSearch[toAdd].adj,n);
+        for(int n=0; n<toSearch[toAdd].adj->length;n++){
+            neighbors = AccessElement(toSearch[toAdd].adj,n);
 
             hasAlready = False;
             /* Check if this path is already i pathTaken */
             /* aka already explored */
-            for(int listValues=0;listValues < pathTaken->tamanho;listValues++){
-                isFound = AcessaElemento(pathTaken,listValues);
+            for(int listValues=0;listValues < pathTaken->length;listValues++){
+                isFound = AccessElement(pathTaken,listValues);
                 if(neighbors->path[DESTINATION] == isFound->id)hasAlready = True;
             }
 
@@ -179,7 +179,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         }
 
     }
-    FreeLista(pathTaken);
+    FreeList(pathTaken);
     free(mstKeys);
     return toReturn;
 }
