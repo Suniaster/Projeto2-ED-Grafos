@@ -31,7 +31,7 @@ void Print_Output_File(const char* name, Lista* toPrint);
 
 /* Algorithms */
 int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);
-Lista* MST_Prim(Vert* toSearch, int startPoint ,int size);
+Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths);
 int Path_Cost(Lista* toCalculate);
 
 void Free_Graph(Vert* toLiberate, int size);

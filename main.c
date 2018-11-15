@@ -15,6 +15,7 @@ int main(int argc, char const *argv[]){
     Vert* graph;
     Lista* allEdges;
     int graphSize;
+    int multiplePaths;
 
     /* Read input and store the information in a vector of vertices */
     /* allEdges is a list with all Edges that not repeat in the graph */
@@ -23,7 +24,7 @@ int main(int argc, char const *argv[]){
     /* Using Prim's algorithm to find the first best MST in the graph */
     /* Best path is a list of edges that contain only the necessary edges in the best path */
     Lista* bestPath;
-    bestPath = MST_Prim(graph, 0, graphSize);
+    bestPath = MST_Prim(graph, 0, graphSize, &multiplePaths);
 
     /* Calculating the path costs */
     int allCost;
@@ -34,7 +35,9 @@ int main(int argc, char const *argv[]){
     /* Printing mesages on console */
     printf("MST com custo: %d\n", bestCost);
     printf("Economia vs malha totalmente conexa: %d\n", allCost - bestCost);
-    printf("Quantidade de MST's diferentes: NULL\n");
+    printf("MST ");
+    if(multiplePaths == True)printf("não ");
+    printf("é única\n");
 
     /* Priting information on output file */
     Print_Output_File("output.txt", bestPath);

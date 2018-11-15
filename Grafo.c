@@ -60,7 +60,7 @@ void Free_Graph(Vert* toLiberate, int size){
     free(toLiberate);
 }
 
-Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
+Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
 
     /* If the starting parameter is not valid, stop the function*/ 
     if(startPoint > size-1){
@@ -89,6 +89,8 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
     int hasAlready;
     int toAdd;
     int minKey=INF; 
+    int checkMultiplePaths;
+    *multiplePaths = False;
 
     /* For every vertex in the vector toSearch */
     for(int iterator=0; iterator < size ; iterator++){
@@ -97,17 +99,19 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
         */
         minKey=INF;
         for(int search=0; search< size; search++){
-           hasAlready = False;
-           for(int listValues=0;listValues < pathTaken->tamanho;listValues++){
+            hasAlready = False;
+            /* Check if this path is already i pathTaken */
+            for(int listValues=0;listValues < pathTaken->tamanho;listValues++){
                 isFound = AcessaElemento(pathTaken,listValues);
                 if(search == isFound->id)hasAlready = True;
-           }
-           if(mstKeys[search] < minKey && hasAlready == False){
-               minKey = mstKeys[search];
-               toAdd = search;
-           }
+            }
+            /* Update minimum key */
+            if(mstKeys[search] < minKey && hasAlready == False){
+                minKey = mstKeys[search];
+                toAdd = search;
+            }
         }
-
+        
         /*Include toAdd to pathTaken*/
         newInPath = (Vert*)malloc(sizeof(Vert));
         memcpy(newInPath, &toSearch[toAdd], sizeof(Vert));
@@ -132,7 +136,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
                 if(neighbors->path[DESTINATION] == isFound->id)hasAlready=True;
             }
 
-            if(neighbors->cost<minKey && hasAlready == True){
+            if(neighbors->cost<=minKey && hasAlready == True){
                 PATH = neighbors;
                 minKey = neighbors->cost;
             }
@@ -144,13 +148,28 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size){
             InsereFinal(toReturn, addPATH);
         }
 
-        /* Update key value of all adjacent vertices of toAdd. To update the key values, 
-        iterate through all adjacent vertices. For every adjacent vertex n, if weight of 
-        edge of this neighbor is less than the previous key value of neighbor, update the key value as weight of the edge to this neighbor
+        /*  Update key value of all adjacent vertices of toAdd. To update the key values, 
+            iterate through all adjacent vertices. For every adjacent vertex n, if weight of 
+            edge of this neighbor is less than the previous key value of neighbor, 
+            update the key value as weight of the edge to this neighbor
+
         */
         for(int n=0; n<toSearch[toAdd].adj->tamanho;n++){
             neighbors = AcessaElemento(toSearch[toAdd].adj,n);
 
+            hasAlready = False;
+            /* Check if this path is already i pathTaken */
+            for(int listValues=0;listValues < pathTaken->tamanho;listValues++){
+                isFound = AcessaElemento(pathTaken,listValues);
+                if(neighbors->path[DESTINATION] == isFound->id)hasAlready = True;
+            }
+
+            /*  if the this neighbor is not already discovered and has the same cost as the last path put
+                it means that exist another MST;
+            */
+            if(neighbors->cost == mstKeys[neighbors->path[DESTINATION]] && hasAlready == False){
+                *multiplePaths = True;
+            }
             if(neighbors->cost < mstKeys[neighbors->path[DESTINATION]]){
                 mstKeys[neighbors->path[DESTINATION]] = neighbors->cost;
             }
