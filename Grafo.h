@@ -15,8 +15,7 @@
 
 typedef struct Vertice{
     int id;                   // Name that represents a Vertice
-    List* adj;               // List of Adjacency. It contains pointer to Edges that are linking this vertice to others
-    int key; 
+    List* adj;               // List of Adjacency. It contains pointer to Edges that are linking this vertice to others 
 }Vert;
 
 typedef struct Edge{
@@ -29,7 +28,7 @@ Vert* Read_Input_Graph(const char* name, int *VectorLength, List** allEdges);
 void Print_Graph(Vert* toPrint,int size);
 void Print_Output_File(const char* name, List* toPrint);
 
-/* Algorithms */
+/* Graph management Functions */
 int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);
 List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths);
 int Path_Cost(List* toCalculate);

@@ -60,6 +60,13 @@ void Free_Graph(Vert* toLiberate, int size){
     free(toLiberate);
 }
 
+/* Algorithm of Prim's to find a Minimum Sppaning Tree:
+    It take as parameter:
+    -> A vector of vertices that are representing the graph
+    -> One starting point (it's to really necessary, but inside the function it's explained)
+    -> The amount of vertices in the graph
+    -> An variable to return by reference if exist more than one Mst
+ */
 List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
 
     /* If the starting parameter is not valid, stop the function*/ 
@@ -72,11 +79,12 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     mstKeys = (int*)malloc(size*sizeof(int));
     for(int i=0;i<size;i++)mstKeys[i]=INF;
     
-    /* Variable to store Edges used in the minimun spanning tree path */
+    /* Variable to store vertices that were already explored */
     List* pathTaken;
     pathTaken = CreateList();
     
-    /* The key of the first entry is 0 */
+    /* The key of the parameter entry is 0 */
+    /* ~This isn't actually necessary, but with it is possible for the function to return diferents MST's*/
     mstKeys[startPoint] = 0;
 
     /* Auxiliar variables */
@@ -100,25 +108,31 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         minKey=INF;
         for(int search=0; search< size; search++){
             hasAlready = False;
+
             /* Check if this path is already i pathTaken */
+            /* ~aka "check if the vertex is already explored" */
             for(int listValues=0;listValues < pathTaken->length;listValues++){
                 isFound = AccessElement(pathTaken,listValues);
                 if(search == isFound->id)hasAlready = True;
             }
-            /* Update minimum key */
+
+            /*  If it's key is minimum and it was not already explored
+                Update the minimum key */
             if(mstKeys[search] < minKey && hasAlready == False){
                 minKey = mstKeys[search];
                 toAdd = search;
             }
         }
         
-        /*Include toAdd to pathTaken*/
-        /* "Explore the vertex" */
+        /* Include toAdd to pathTaken */
+        /* ~aka "Explore the vertex with minimum key value that was not 
+            alredy explored" 
+        */
         newInPath = (Vert*)malloc(sizeof(Vert));
         memcpy(newInPath, &toSearch[toAdd], sizeof(Vert));
         InsertEnd(pathTaken, newInPath);
 
-
+         /* "Adding the last added edge to the list that will be returned" */
         /*  To know what Edge is been used pass through vertices:
             Use the last vertex that was put on the path List
             "newInpPath" to:
@@ -127,7 +141,6 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             This way, we can know from what vertex the last vertex that was put
             in the path list come from
          */
-        /* "Adding the last added edge to the list that will be returned" */
         minKey = INF;
         for(int i=0;i< newInPath->adj->length;i++){
             neighbors = AccessElement(newInPath->adj, i);
