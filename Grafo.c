@@ -80,22 +80,22 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     mstKeys[startPoint] = 0;
 
     /* Auxiliar variables */
-    Vert* isFound;
-    Vert* newInPath;
-    Edge* neighbors;
-    Edge* PATH;
-    Edge* addPATH;
-    Lista* toReturn = CriaLista();
-    int hasAlready;
-    int toAdd;
-    int minKey=INF; 
-    int checkMultiplePaths;
-    *multiplePaths = False;
+    Vert* isFound;                      // Auxliar to check if some vertex is already in the set of vertices explored
+    Vert* newInPath;                    // Auxiliar to be inserted in a set 
+    Edge* neighbors;                    // Auxiliar to iterate through a list of Edges
+    Edge* PATH;                         // Used to find the last Edge that was put in the MST
+    Edge* addPATH;                      // Stores a copy of PATH variable
+    Lista* toReturn = CriaLista();      // List of Edges to be returned
+    int hasAlready;                     // Work as Bollean to check an existence of a element in a set
+    int toAdd;                          // Store the index of the next vertice to be explored
+    int minKey=INF;                     // Necessary to found minimum values
+    *multiplePaths = False;             // Variable to check if exist more then one MST
 
     /* For every vertex in the vector toSearch */
     for(int iterator=0; iterator < size ; iterator++){
         
         /* Pick a vertex toAdd which is not there in pathTaken and has minimum key value.
+           "Choose the best vertex to be explored"
         */
         minKey=INF;
         for(int search=0; search< size; search++){
@@ -113,6 +113,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         }
         
         /*Include toAdd to pathTaken*/
+        /* "Explore the vertex" */
         newInPath = (Vert*)malloc(sizeof(Vert));
         memcpy(newInPath, &toSearch[toAdd], sizeof(Vert));
         InsereFinal(pathTaken, newInPath);
@@ -126,6 +127,7 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             This way, we can know from what vertex the last vertex that was put
             in the path list come from
          */
+        /* "Adding the last added edge to the list that will be returned" */
         minKey = INF;
         for(int i=0;i< newInPath->adj->tamanho;i++){
             neighbors = AcessaElemento(newInPath->adj, i);
@@ -141,7 +143,6 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
                 minKey = neighbors->cost;
             }
         }
-        // If the last block of code has find what it was suposed to, insert that Edge in a list to return
         if(minKey != INF){
             addPATH=(Edge*)malloc(sizeof(Edge));
             memcpy(addPATH, PATH, sizeof(Edge));
@@ -152,24 +153,26 @@ Lista* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             iterate through all adjacent vertices. For every adjacent vertex n, if weight of 
             edge of this neighbor is less than the previous key value of neighbor, 
             update the key value as weight of the edge to this neighbor
-
         */
         for(int n=0; n<toSearch[toAdd].adj->tamanho;n++){
             neighbors = AcessaElemento(toSearch[toAdd].adj,n);
 
             hasAlready = False;
             /* Check if this path is already i pathTaken */
+            /* aka already explored */
             for(int listValues=0;listValues < pathTaken->tamanho;listValues++){
                 isFound = AcessaElemento(pathTaken,listValues);
                 if(neighbors->path[DESTINATION] == isFound->id)hasAlready = True;
             }
 
-            /*  if the this neighbor is not already discovered and has the same cost as the last path put
+            /*  if this neighbor is not already discovered and has the same cost as the last path put
                 it means that exist another MST;
             */
             if(neighbors->cost == mstKeys[neighbors->path[DESTINATION]] && hasAlready == False){
                 *multiplePaths = True;
             }
+
+            /* Update the cost of neighbours if it's necessary */
             if(neighbors->cost < mstKeys[neighbors->path[DESTINATION]]){
                 mstKeys[neighbors->path[DESTINATION]] = neighbors->cost;
             }
