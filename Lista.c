@@ -8,7 +8,8 @@ Lista* CriaLista(){
 
     NovaLista->inicio = (cel*)malloc(sizeof(cel));
     NovaLista->fim=NovaLista->inicio;
-
+    NovaLista->inicio->prox=NULL;   
+    NovaLista->inicio->ordem = NULL;    
     NovaLista->tamanho=0;
     return NovaLista;
 }
@@ -117,4 +118,66 @@ void EmptyList(Lista* toEmpty){
     }
     free(toEmpty->inicio);
     free(toEmpty);
+}
+
+
+void* RetiraOrdList(Lista* aRemover){
+    cel* removida;
+    void* infReturn;
+    if(aRemover->tamanho == 0){
+        printf("Tentando remover de Fila Vazia\n");
+        return NULL;
+    }
+    removida = aRemover->inicio;
+    aRemover->inicio = aRemover->inicio->prox;
+    infReturn = aRemover->inicio->info;
+
+    if(removida->ordem!=NULL) free(removida->ordem);
+    free(removida);
+    aRemover->tamanho--;
+    return infReturn;
+}
+
+void FreeOrdLista(Lista* aLiberar){
+    while(aLiberar->tamanho > 0){
+        free(RetiraOrdList(aLiberar));
+    }
+    if(aLiberar->inicio->ordem!=NULL) free(aLiberar->inicio->ordem);
+    free(aLiberar->inicio);
+    free(aLiberar);
+}
+
+void InsereCrescente(Lista* aInserir, void* inf, int* Ordem, int quantidadeDeChaves){
+
+    cel* Inserindo = (cel*)malloc(sizeof(cel));
+    Inserindo->info = inf;
+    Inserindo->ordem = (int*)malloc(quantidadeDeChaves*sizeof(int));
+    aInserir->tamanho++;
+
+    /* Coping order to be followed */
+    for(int i=0; i < quantidadeDeChaves; i++)Inserindo->ordem[i] = Ordem[i];
+
+    /* Find the right place to put the new Information */
+    cel* confere;
+    confere = aInserir->inicio;
+    if(confere->prox == NULL){
+        Inserindo->prox = NULL;
+        confere->prox = Inserindo;
+        return;
+    }
+    
+    for(int keyNumber=0; keyNumber < quantidadeDeChaves ;keyNumber++){
+        while(confere->prox != NULL && Ordem[keyNumber] > confere->prox->ordem[keyNumber]){
+            confere = confere->prox;
+        }
+    }
+    
+    if(confere->prox == NULL){
+        Inserindo->prox = confere->prox;
+        confere->prox = Inserindo;
+        return;
+    }
+
+    Inserindo->prox = confere->prox;
+    confere->prox = Inserindo;
 }

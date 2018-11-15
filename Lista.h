@@ -4,6 +4,7 @@
 typedef struct doubleLinkedNode{
 
     void* info;
+    int *ordem;
     struct doubleLinkedNode* prox;
     struct doubleLinkedNode* ant;
 
@@ -32,7 +33,12 @@ void* AcessaElemento(Lista* acessando, int indice);
 void* RemoveInicio(Lista* aRemover);
 void* RemoveFinal(Lista* aRemover);
 
+/* Lista ordenada */
+void InsereCrescente(Lista* aInserir, void* inf, int* Ordem, int quantidadeDeChaves);
+void* RetiraOrdList(Lista* aRemover);
+void FreeOrdLista(Lista* aLiberar);
 
+/* Outros métodos úteis */
 int ProcuraRef(Lista* aProcurar, void* procurando);
 void FreeLista(Lista* aLiberar);
 void EmptyList(Lista* toEmpty);

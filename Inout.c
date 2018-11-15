@@ -105,6 +105,7 @@ void Print_Output_File(const char* name, Lista* toPrint){
     /* Ordering elements to print information in order */
     int swap;
     Edge* willChange;
+    Lista* orderedEdges = CriaLista();
     for(int i=0; i < toPrint->tamanho; i++){
         willChange = AcessaElemento(toPrint, i);
         if(willChange->path[ORIGIN] > willChange->path[DESTINATION]){
@@ -112,15 +113,18 @@ void Print_Output_File(const char* name, Lista* toPrint){
             willChange->path[ORIGIN] =  willChange->path[DESTINATION];
             willChange->path[DESTINATION] = swap;
         }
+        InsereCrescente(orderedEdges, willChange, willChange->path, 2);
     }
-
+    
     /* Priting the information of the edges */
     Edge* willPrint;
     for(int i=0; i < toPrint->tamanho; i++){
-        willPrint = AcessaElemento(toPrint, i);
+        willPrint = RetiraOrdList(orderedEdges);
         fprintf(printing, "%d,%d\n", willPrint->path[ORIGIN], willPrint->path[DESTINATION]);
     }
+
     /* Liberating allocated data */
+    FreeOrdLista(orderedEdges);
 
     /* Closing File */
     fclose(printing);
