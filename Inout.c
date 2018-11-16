@@ -104,7 +104,8 @@ void Order_Edge_Array(Edge* toReturn, int size){
             toReturn[iterator-1].path[DESTINATION] = swap;
         }
 
-        /* Pseudo-InsertionSort to be certain that the element is in the correct place*/
+        /* Pseudo-InsertionSort to be certain that the element is in the correct place */
+        /* The edges have to be in order, with the first edge having more */
         for(int i=iterator-1; i>0 ;i--){
             now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
             prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
