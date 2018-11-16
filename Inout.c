@@ -91,6 +91,35 @@ void Print_Graph(Vert* toPrint,int size){
     }
 }
 
+void Order_Edge_Array(Edge* toReturn, int size){
+    int swap;
+    int now, prev;
+    Edge swapEdge;
+    for(int iterator = 1; iterator < size; iterator++){
+        /* Ordering elements in toReturn array */
+        /* If Origin is less than the Destinantion, swap it's values */
+        if(toReturn[iterator-1].path[ORIGIN] > toReturn[iterator-1].path[DESTINATION]){
+            swap = toReturn[iterator-1].path[ORIGIN];
+            toReturn[iterator-1].path[ORIGIN] =  toReturn[iterator-1].path[DESTINATION];
+            toReturn[iterator-1].path[DESTINATION] = swap;
+        }
+
+        /* Pseudo-InsertionSort to be certain that the element is in the correct place*/
+        for(int i=iterator-1; i>0 ;i--){
+            now = toReturn[i].path[ORIGIN]*10 + toReturn[i].path[DESTINATION];
+            prev = toReturn[i-1].path[ORIGIN]*10 + toReturn[i-1].path[DESTINATION];
+            while(now < prev){
+                swapEdge = toReturn[i];
+                toReturn[i] =  toReturn[i-1];
+                toReturn[i-1] = swapEdge;
+                /* Recalculating values */ 
+                now = toReturn[i].path[ORIGIN]*10 + toReturn[i].path[DESTINATION];
+                prev = toReturn[i-1].path[ORIGIN]*10 + toReturn[i-1].path[DESTINATION];
+            }
+        }
+    }
+}
+
 /*  Function to print the file with edges information 
     Takes as input:
         -> Name of the file ("name");
@@ -102,17 +131,8 @@ void Print_Output_File(const char* name, Edge* toPrint, int size){
     /* Opening file to write */
     FILE* printing;
     printing = fopen(name, "w");
-
-    /* Ordering elements to print information in order */
-    int swap;
-    for(int i=0; i < size; i++){
-        if(toPrint[i].path[ORIGIN] > toPrint[i].path[DESTINATION]){
-            swap = toPrint[i].path[ORIGIN];
-            toPrint[i].path[ORIGIN] =  toPrint[i].path[DESTINATION];
-            toPrint[i].path[DESTINATION] = swap;
-        }
-    }
     
+    Order_Edge_Array(toPrint, size);
     /* Priting the information of the edges */
     Edge* willPrint;
     for(int i=0; i < size; i++){

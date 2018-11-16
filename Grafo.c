@@ -109,11 +109,15 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     Edge* neighbors;                    // Auxiliar to iterate through a list of Edges
     Edge* PATH;                         // Used to find the last Edge that was put in the MST
     Edge* addPATH;                      // Stores a copy of PATH variable
-    Edge* toReturn=malloc((size-1)*sizeof(Edge));// Array of Edges to be returned
+    Edge* toReturn=calloc((size-1),sizeof(Edge));// Array of Edges to be returned
     int hasAlready;                     // Work as Bollean to check an existence of a element in a set
     int toAdd;                          // Store the index of the next vertice to be explored
     int minKey=INF;                     // Necessary to found minimum values
     *multiplePaths = False;             // Variable to check if exist more then one MST
+    /* Auxiliar Variables to Order the return vector */
+    int swap;
+    Edge swapEdge;
+    int now, prev; 
 
     /* For every vertex in the vector toSearch */
     for(int iterator=0; iterator < size ; iterator++){
@@ -165,8 +169,9 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             }
         }
         if(minKey != INF){
+            /* Inserting element into returning array */
             toReturn[iterator-1] = *PATH;
-            printf("%d,%d\n",toReturn[iterator-1].path[DESTINATION], toReturn[iterator-1].path[ORIGIN]);
+
         }
 
         /*  Update key value of all adjacent vertices of toAdd. To update the key values, 
