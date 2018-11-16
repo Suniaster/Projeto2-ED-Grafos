@@ -77,11 +77,15 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     /* First is created a vector with the same size of Vertices Vector to store key values and start all of them with infinite*/ 
     int* mstKeys;
     mstKeys = (int*)malloc(size*sizeof(int));
-    for(int i=0;i<size;i++)mstKeys[i]=INF;
     
     /* Variable to store vertices that were already explored */
-    List* pathTaken;
-    pathTaken = CreateList();
+    int* exploredVertices = malloc(size*sizeof(int));
+
+    /* Initialization variables */
+    for(int i=0;i<size;i++){
+        exploredVertices[i]=NOT_VISITED;
+        mstKeys[i]=INF;
+    }
     
     /* The key of the parameter entry is 0 */
     /* ~This isn't actually necessary, but with it is possible for the function to return diferents MST's*/
@@ -89,7 +93,6 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
 
     /* Auxiliar variables */
     Vert* isFound;                      // Auxliar to check if some vertex is already in the set of vertices explored
-    Vert* newInPath;                    // Auxiliar to be inserted in a set 
     Edge* neighbors;                    // Auxiliar to iterate through a list of Edges
     Edge* PATH;                         // Used to find the last Edge that was put in the MST
     Edge* addPATH;                      // Stores a copy of PATH variable
@@ -102,7 +105,7 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     /* For every vertex in the vector toSearch */
     for(int iterator=0; iterator < size ; iterator++){
         
-        /* Pick a vertex toAdd which is not there in pathTaken and has minimum key value.
+        /* Pick a vertex toAdd which is not there in exploredVertices and has minimum key value.
            "Choose the best vertex to be explored"
         */
         minKey=INF;
@@ -111,10 +114,7 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
 
             /* Check if this path is already i pathTaken */
             /* ~aka "check if the vertex is already explored" */
-            for(int listValues=0;listValues < pathTaken->length;listValues++){
-                isFound = AccessElement(pathTaken,listValues);
-                if(search == isFound->id)hasAlready = True;
-            }
+            if(exploredVertices[search] == VISITED) hasAlready = True;
 
             /*  If it's key is minimum and it was not already explored
                 Update the minimum key */
@@ -124,15 +124,13 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             }
         }
         
-        /* Include toAdd to pathTaken */
+        /* Include toAdd to exploredVertices */
         /* ~aka "Explore the vertex with minimum key value that was not 
             alredy explored" 
         */
-        newInPath = (Vert*)malloc(sizeof(Vert));
-        memcpy(newInPath, &toSearch[toAdd], sizeof(Vert));
-        InsertEnd(pathTaken, newInPath);
+        exploredVertices[toAdd] = VISITED;
 
-         /* "Adding the last added edge to the list that will be returned" */
+        /* "Adding the last added edge to the list that will be returned" */
         /*  To know what Edge is been used pass through vertices:
             Use the last vertex that was put on the path List
             "newInpPath" to:
@@ -142,14 +140,11 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             in the path list come from
          */
         minKey = INF;
-        for(int i=0;i< newInPath->adj->length;i++){
-            neighbors = AccessElement(newInPath->adj, i);
+        for(int i=0;i < toSearch[toAdd].adj->length;i++){
+            neighbors = AccessElement(toSearch[toAdd].adj, i);
             hasAlready = False;
 
-            for(int j=0;j<pathTaken->length;j++){
-                isFound = AccessElement(pathTaken,j);
-                if(neighbors->path[DESTINATION] == isFound->id)hasAlready=True;
-            }
+            if(exploredVertices[neighbors->path[DESTINATION]] == VISITED) hasAlready = True;
 
             if(neighbors->cost<=minKey && hasAlready == True){
                 PATH = neighbors;
@@ -173,10 +168,7 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             hasAlready = False;
             /* Check if this path is already i pathTaken */
             /* aka already explored */
-            for(int listValues=0;listValues < pathTaken->length;listValues++){
-                isFound = AccessElement(pathTaken,listValues);
-                if(neighbors->path[DESTINATION] == isFound->id)hasAlready = True;
-            }
+            if(exploredVertices[neighbors->path[DESTINATION]] == VISITED) hasAlready = True;
 
             /*  if this neighbor is not already discovered and has the same cost as the last path put
                 it means that exist another MST;
@@ -192,7 +184,7 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         }
 
     }
-    FreeList(pathTaken);
+    free(exploredVertices);
     free(mstKeys);
     return toReturn;
 }
