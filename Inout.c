@@ -94,9 +94,10 @@ void Print_Graph(Vert* toPrint,int size){
 /*  Function to print the file with edges information 
     Takes as input:
         -> Name of the file ("name");
-        -> A list of edges to be printed ("toPrint");
+        -> An array of edges to be printed ("toPrint");
+        -> the size of the array
 */
-void Print_Output_File(const char* name, List* toPrint){
+void Print_Output_File(const char* name, Edge* toPrint, int size){
 
     /* Opening file to write */
     FILE* printing;
@@ -104,27 +105,19 @@ void Print_Output_File(const char* name, List* toPrint){
 
     /* Ordering elements to print information in order */
     int swap;
-    Edge* willChange;
-    List* orderedEdges = CreateList();
-    for(int i=0; i < toPrint->length; i++){
-        willChange = AccessElement(toPrint, i);
-        if(willChange->path[ORIGIN] > willChange->path[DESTINATION]){
-            swap = willChange->path[ORIGIN];
-            willChange->path[ORIGIN] =  willChange->path[DESTINATION];
-            willChange->path[DESTINATION] = swap;
+    for(int i=0; i < size; i++){
+        if(toPrint[i].path[ORIGIN] > toPrint[i].path[DESTINATION]){
+            swap = toPrint[i].path[ORIGIN];
+            toPrint[i].path[ORIGIN] =  toPrint[i].path[DESTINATION];
+            toPrint[i].path[DESTINATION] = swap;
         }
-        InsereCrescente(orderedEdges, willChange, willChange->path, 2);
     }
     
     /* Priting the information of the edges */
     Edge* willPrint;
-    for(int i=0; i < toPrint->length; i++){
-        willPrint = RetiraOrdList(orderedEdges);
-        fprintf(printing, "%d,%d\n", willPrint->path[ORIGIN], willPrint->path[DESTINATION]);
+    for(int i=0; i < size; i++){
+        fprintf(printing, "%d,%d\n", toPrint[i].path[ORIGIN], toPrint[i].path[DESTINATION]);
     }
-
-    /* Liberating allocated data */
-    FreeOrdList(orderedEdges);
 
     /* Closing File */
     fclose(printing);

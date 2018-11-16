@@ -42,12 +42,21 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
 }
 
 /*  A function that takes a List of Edges as input and return the sum of the costs */
-int Path_Cost(List* toCalculate){
+int Path_Cost_List(List* toCalculate){
     int totalCost = 0;
     for(int index=0; index < toCalculate->length; index++){
         Edge* evaluating;
         evaluating = AccessElement(toCalculate, index);
         totalCost += evaluating->cost;
+    }
+    return totalCost;
+}
+
+/*  A function that takes a List of Edges as input and return the sum of the costs */
+int Path_Cost_Array(Edge* toCalculate, int size){
+    int totalCost = 0;
+    for(int index=0; index < size; index++){
+        totalCost += toCalculate[index].cost;
     }
     return totalCost;
 }
@@ -66,8 +75,12 @@ void Free_Graph(Vert* toLiberate, int size){
     -> One starting point (it's to really necessary, but inside the function it's explained)
     -> The amount of vertices in the graph
     -> An variable to return by reference if exist more than one Mst
+
+    Knowing that a MST of a connected graph with N vertices have always N-1 egdes,
+    the function will return a array ,with length size-1, of edges that are used in to make 
+    the mst. 
  */
-List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
+Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
 
     /* If the starting parameter is not valid, stop the function*/ 
     if(startPoint > size-1){
@@ -96,7 +109,7 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     Edge* neighbors;                    // Auxiliar to iterate through a list of Edges
     Edge* PATH;                         // Used to find the last Edge that was put in the MST
     Edge* addPATH;                      // Stores a copy of PATH variable
-    List* toReturn = CreateList();      // List of Edges to be returned
+    Edge* toReturn=malloc((size-1)*sizeof(Edge));// Array of Edges to be returned
     int hasAlready;                     // Work as Bollean to check an existence of a element in a set
     int toAdd;                          // Store the index of the next vertice to be explored
     int minKey=INF;                     // Necessary to found minimum values
@@ -152,9 +165,8 @@ List* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             }
         }
         if(minKey != INF){
-            addPATH=(Edge*)malloc(sizeof(Edge));
-            memcpy(addPATH, PATH, sizeof(Edge));
-            InsertEnd(toReturn, addPATH);
+            toReturn[iterator-1] = *PATH;
+            printf("%d,%d\n",toReturn[iterator-1].path[DESTINATION], toReturn[iterator-1].path[ORIGIN]);
         }
 
         /*  Update key value of all adjacent vertices of toAdd. To update the key values, 

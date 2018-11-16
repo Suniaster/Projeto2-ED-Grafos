@@ -22,15 +22,15 @@ int main(int argc, char const *argv[]){
     graph = Read_Input_Graph(argv[1], &graphSize, &allEdges);
 
     /* Using Prim's algorithm to find the first best MST in the graph */
-    /* Best path is a list of edges that contain only the necessary edges in the best path */
-    List* bestPath;
+    /* Best path is a array of edges that contain only the necessary edges in the best path */
+    Edge* bestPath;
     bestPath = MST_Prim(graph, 0, graphSize, &multiplePaths);
 
     /* Calculating the path costs */
     int allCost;
     int bestCost;
-    allCost = Path_Cost(allEdges);
-    bestCost = Path_Cost(bestPath);
+    allCost = Path_Cost_List(allEdges);
+    bestCost = Path_Cost_Array(bestPath, graphSize - 1);
 
     /* Printing mesages on console */
     printf("MST com custo: %d\n", bestCost);
@@ -40,11 +40,11 @@ int main(int argc, char const *argv[]){
     printf("é única\n");
 
     /* Priting information on output file */
-    Print_Output_File("output.txt", bestPath);
+    Print_Output_File("output.txt", bestPath, graphSize - 1);
 
     /* Freeing memory alocated */
     Free_Graph(graph, graphSize);
-    FreeList(bestPath);
+    free(bestPath);
     FreeList(allEdges);
     
     return 0;
