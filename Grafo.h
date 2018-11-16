@@ -5,7 +5,7 @@
 #define DESTINATION 1
 #define VISITED 1
 #define NOT_VISITED 0
-#define INF 100000
+#define INF 10000
 #define True 1
 #define False 0
 

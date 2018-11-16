@@ -106,15 +106,15 @@ void Order_Edge_Array(Edge* toReturn, int size){
 
         /* Pseudo-InsertionSort to be certain that the element is in the correct place*/
         for(int i=iterator-1; i>0 ;i--){
-            now = toReturn[i].path[ORIGIN]*10 + toReturn[i].path[DESTINATION];
-            prev = toReturn[i-1].path[ORIGIN]*10 + toReturn[i-1].path[DESTINATION];
+            now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
+            prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
             while(now < prev){
                 swapEdge = toReturn[i];
                 toReturn[i] =  toReturn[i-1];
                 toReturn[i-1] = swapEdge;
                 /* Recalculating values */ 
-                now = toReturn[i].path[ORIGIN]*10 + toReturn[i].path[DESTINATION];
-                prev = toReturn[i-1].path[ORIGIN]*10 + toReturn[i-1].path[DESTINATION];
+                now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
+                prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
             }
         }
     }
