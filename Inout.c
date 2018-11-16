@@ -95,18 +95,18 @@ void Order_Edge_Array(Edge* toReturn, int size){
     int swap;
     int now, prev;
     Edge swapEdge;
-    for(int iterator = 1; iterator < size; iterator++){
+    for(int iterator = 0; iterator < size; iterator++){
         /* Ordering elements in toReturn array */
         /* If Origin is less than the Destinantion, swap it's values */
-        if(toReturn[iterator-1].path[ORIGIN] > toReturn[iterator-1].path[DESTINATION]){
-            swap = toReturn[iterator-1].path[ORIGIN];
-            toReturn[iterator-1].path[ORIGIN] =  toReturn[iterator-1].path[DESTINATION];
-            toReturn[iterator-1].path[DESTINATION] = swap;
+        if(toReturn[iterator].path[ORIGIN] > toReturn[iterator].path[DESTINATION]){
+            swap = toReturn[iterator].path[ORIGIN];
+            toReturn[iterator].path[ORIGIN] =  toReturn[iterator].path[DESTINATION];
+            toReturn[iterator].path[DESTINATION] = swap;
         }
 
-        /* Pseudo-InsertionSort to be certain that the element is in the correct place */
+        /* InsertionSort to be certain that the element is in the correct place */
         /* The edges have to be in order, with the first edge having more */
-        for(int i=iterator-1; i>0 ;i--){
+        for(int i=iterator; i>0 ;i--){
             now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
             prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
             while(now < prev){
