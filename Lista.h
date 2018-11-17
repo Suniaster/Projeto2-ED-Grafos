@@ -33,14 +33,7 @@ void* AccessElement(List* acessando, int indice);
 void* RemoveStart(List* aRemover);
 void* RemoveEnd(List* aRemover);
 
-/* List ordenada */
-void InsereCrescente(List* aInserir, void* inf, int* order, int quantidadeDeChaves);
-void* RetiraOrdList(List* aRemover);
-void FreeOrdList(List* aLiberar);
-
 /* Outros métodos úteis */
-int ProcuraRef(List* aProcurar, void* procurando);
 void FreeList(List* aLiberar);
-void EmptyList(List* toEmpty);
 
 #endif

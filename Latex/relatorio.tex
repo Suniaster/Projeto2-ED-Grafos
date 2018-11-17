@@ -19,8 +19,91 @@
           
     \end{titlepage}
     \section{Problem and solution}
+    \paragraph{}
+        Several kind of problems in the computational area are originated from dealing with graphs an trying to extract information from them. A subset of this area is finding a Minimum Spannig Tree (\emph{MST}) of a graph. The \emph{MST} is defined as the minimum set of edges of a graph that connect all the vertices and have the minimum sum of weights. Here we have an example of a graph with it's \emph{MST} highlighted.
+    \begin{figure}[h]
+        \includegraphics[width=\linewidth]{exampleMST}
+        \caption{Exemple of an Graph with it's MST costing 110}
+    \end{figure}
+    \paragraph{}
+        To resolve that problem it was given some information about the graphs that would be used. All of them are planar graphs, in other words, they doesn't have any edges that are crossing each other, and they have to be undirected, that means that for any vertices connected $\{\alpha , \beta\}$, the connection $\alpha \rightarrow \beta$ is the same as $\beta \rightarrow \alpha$. Furthermore, all existing edges have a weight (this don't need to respect triangular inequality) and the graph is connected ($\forall$ vertex $\nu_1$, $\exists$ a path to a vertex $\nu_2$).
+    \paragraph{}
+        With this information it's possible to deduct some information:
+        \begin{itemize}
+            \item The \emph{MST} must not have any cicle. \emph{Proof by contradiction:} If it exists a cicle in the graph it means that there is at least one edge that can be deleted and the graph will continue to be connected, so, it's not a \emph{MST} because this edge necessarily have a weight.
+            \item  Now, knowing that \emph{MST} cannot have cicles, it can be affirmed that for a graph with \(\nu\) vertices, his \emph{MST} has necessarily \(\nu-1\) edges. \emph{Proof by induction:} if you start a graph having only one node, there can't be any edges on it. Now, if you add one vertex, to keep the graph connected, an connection has to be added too. If we add one more vertex, a new connection has to be subjoint, and so on. As long as the graph remain acyclic, for a set of \(\nu\) vertices there will be at most \(\nu-1\) edges. 
+        \end{itemize} 
+        Knowing the specifications of the given problem, the procedure taken was create a software with an implementation of an classical algorithm called \emph{Prim's algorithm}. This will be explained with more details later on.
+        
     \section{Input and output data}
-    \section{The Program's Logic}
+    \paragraph{}
+        The program receives as input data from a file that begins with the number of vertices of the graph followed by an adjacency matrix of vertices that represent all edges and the cost of them. A line $\mu$ of this matrix contain all connections of the vertex $\nu_\mu$.
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.6\textwidth]{imageinput}
+                \caption{Visualization of input numbers}
+            \end{center}
+        \end{figure}
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{textinput}
+                \caption{Example of an input File}
+            \end{center}
+        \end{figure}
+    \paragraph{}
+        It's valid to notice that we have an simetric matrix. This is caused by the fact that the graph is undirected. 
+    \paragraph{}
+        The output of the program is separated in two diferent sections. The first one comes in a form of terminal message, printing out estatistics about: the cost of \emph{MST}, the cost saved in comparison to the sum of costs of all edges and if exist more than one \emph{MST}.
+        \paragraph{}
+        The second part of the output is written in a text file. It has to contain a list of all edges used in the \emph{MST} found, orderd by the vertexes in each edge.
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.6\textwidth]{terminaloutput}
+                \caption{Output if the graph in Figure 2 was used as input}
+            \end{center}
+        \end{figure}
+    \section{The Program}
+        \subsection{Program Modules}
+        \paragraph{}
+        The program was subdivided into four modules: 
+        \begin{itemize}
+            \item \emph{Inout.c}: The functions to handle input and output data, and store that information in memory.
+            \item \emph{List.c}: Methods that act and operate on the list structures.
+            \item \emph{Grafo.c}: Functions to manipulate graphs and extract information from them.
+            \item \emph{main.c}: This is where all the modules above are combined to make the principal logic of the program.
+        \end{itemize}
+        \paragraph{Interdependence}The only module that is independent alone is the \emph{Lista.c} module. The \emph{Grafo.c} module needs lists to function correctly and the input/output module depends on this two structures. Finally, but not less important, \emph{main.c} depends on all this three modules previously cited.
+        \subsection{Abstract Data Structure}
+        \paragraph{}
+        The abstract data structure (\emph{ADT}) and structures used to resolve the \emph{MST} problem are listed bellow here:
+        \begin{itemize}
+            \item ADT List;
+            \item Structure for $Vertices$;
+            \item Structure for $Edges$;
+        \end{itemize} 
+        \paragraph{}
+        The graph is formed by ${Vertices \cup Edges}$ structures. An $edge$ contain an integer to store it's cost and an array with size of 2, to store the vertices that it is connecting. A vertex contain an integer that represent his $id$ (an identifier) and a list of adjacency that carry pointers to edges that this vertice has. The functions that operates in this structures are:
+        \begin{itemize}
+            \item Read\_Input\_Graph: Read a file with a matrix of adjacency and returns an vector of $vertices$ with all information of the file stored;
+            \item Print\_Graph:\ Takes a vector of $vertices$ as input and print all vertices and what connection each one of them have;
+            \item Print\_Output\_File: Print the information in the format that it was especifed before;
+            \item MST\_Prim: The implementation of the \emph{Prim's algorithm};
+            \item Path\_Cost\_List: Calculate the total path cost of a list of $Edges$;
+            \item Path\_Cost\_Array: Calculate the total path cost of an array of $Edges$;
+            \item Free\_Graph: Free the space that was allocated in the vector of $vertices$
+        \end{itemize}
+        \paragraph{}
+        The \emph{ADT} of List is formed by a structure called List that have an integer representing it's length and pointers to structures $cel$'s. This structure $cel$ is the one that actually holds the information that the list is storing. Besides that, this \emph{ADT} has the following functions:
+        \begin{itemize}
+            \item CreateList: Allocates space for a new List;
+            \item ListVaviz: Check if a list has any information inside of it;
+            \item InsertStart: Insert an element in the start of the list;
+            \item InsertEnd: Insert an element in the end of a list;
+            \item AccessElement: Return the $index$ element of the list;
+            \item RemoveStar: Remove an element from the start of the list;
+            \item RemoveEnd: Remove an element from the end of the list;
+            \item FreeList: Liberate the space allocated by the list and all the elements inside of it; 
+        \end{itemize}
         \subsection{The Complexity}
     \section{Appraising the algorithm}
     \section{Software execution}

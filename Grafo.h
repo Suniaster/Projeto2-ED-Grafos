@@ -33,6 +33,7 @@ int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);
 Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths);
 int Path_Cost_List(List* toCalculate);
 int Path_Cost_Array(Edge* toCalculate, int size);
+void Order_Edge_Array(Edge* toReturn, int size);
 
 void Free_Graph(Vert* toLiberate, int size);
 #endif
