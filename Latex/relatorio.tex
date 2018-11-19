@@ -211,14 +211,14 @@
     $$
     \subparagraph{}
     It's possible to discart the $\mu$ part because in terms of complexity, $\nu^2$ is expected to be much greater the $\mu$.
-    \paragraph{Input and Output module}
-    Going from the simplest function to the most complex function in this module:
-    \begin{itemize}
-        \item Print\_Output\_Terminal: only print the parameters in terminal, so its complexity is $\mathcal{O}(1)$;
-        \item Print\_Output\_File: $\mathcal{O}(\nu^2)$, because it have to order $\nu-1$ edges, using Order\_Edge\_Array metioned before, and then print them on a output file;
-        \item Print\_Graph That: $\mathcal{O}(\nu \times \mu)$, because it has to print every vertex and connection of it;
-        \item Read\_Input\_File: $\mathcal{O}(\nu^2)$, because it reads an square matrix of adjacency with $\nu^2$ elements and store its data in memory;
-    \end{itemize}
+    \paragraph{}
+    In the last module, \emph{Inout.c}, going from the simplest function to the most complex function in this module:
+    \begin{description}
+        \item[Print\_Output\_Terminal] only print the parameters in terminal, so its complexity is $\mathcal{O}(1)$;
+        \item[Print\_Output\_File] $\mathcal{O}(\nu^2)$, because it have to order $\nu-1$ edges, using Order\_Edge\_Array metioned before, and then print them on a output file;
+        \item[Print\_Graph That] $\mathcal{O}(\nu \times \mu)$, because it has to print every vertex and connection of it;
+        \item[Read\_Input\_File] $\mathcal{O}(\nu^2)$, because it reads an square matrix of adjacency with $\nu^2$ elements and store its data in memory;
+    \end{description}
     \section{Appraising the algorithm}
     \section{Software execution}
     
