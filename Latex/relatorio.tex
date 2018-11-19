@@ -219,7 +219,48 @@
         \item[Print\_Graph That] $\mathcal{O}(\nu \times \mu)$, because it has to print every vertex and connection of it;
         \item[Read\_Input\_File] $\mathcal{O}(\nu^2)$, because it reads an square matrix of adjacency with $\nu^2$ elements and store its data in memory;
     \end{description}
-    \section{Appraising the algorithm}
+    \section{Appraising the program}
+    \paragraph{}
+    To check if the program if working properly, first was used a small input with some special characteristics. It has only 3 vertexes, and 3 edges such that every vertex is connected to the other two vertices. The last and important characteristic to evaluate this input is that two edges have the same weight $\omega$. With this information the graph built is:
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=0.4\textwidth]{apraise1}
+        \end{center}
+    \end{figure}
+    \paragraph{}
+    With $\omega$ and $\beta$ being unknown values, there exist three possibilities for the MST's on this graph.
+    \begin{description}
+        \item[$\omega > \beta$] With this condition, the edge with cost $\beta$ will be for sure in MST, and only one edge with cost $\omega$ will necessary to complete it. So, the possibilities, making the graph this way are:
+        $$
+        0 \Rightarrow 2, 1 \Rightarrow 2;
+        $$
+        $$
+        0 \Rightarrow 1, 1 \Rightarrow 2; 
+        $$
+        \item[$\omega < \beta$] The only necessary make the MST are the two with cost of $\omega$ so, it only have a single MST that is:
+        $$
+        0 \Rightarrow 1, 0 \Rightarrow 2;
+        $$   
+    \end{description}
+    \paragraph{}
+    Even being a simple and short graph, it can show us that changing values of some edges in relation to other, can change the entire result of the program. Here we have the output of the program for the two cases cited before.
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{apraise2}
+            \caption{Output when using $\omega=5$ and $\beta=3$}
+        \end{center}
+    \end{figure}
+    Clearly the output of the program matches what were expected since the sum of edges used in MST is 8 and can be deducted that was used one edge with cost $\omega$ and one with cost $\beta$. Furthermore, the output states that the MST is not unique, and again match with the theory mentioned before.
+    \paragraph{}
+    To simulate the other possible situation that this graph can show, it will be simply swaped the values of $\omega$ and $\beta$ and the result is:
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{apraise3}
+            \caption{Output when using $\omega=3$ and $\beta=5$}
+        \end{center}
+    \end{figure}
+    \paragraph{}
+    With this we can see that the input changed so that now MST is unique, and the MST cost is equal to $2\times\omega$ as it were expected.
     \section{Software execution}
     
     \begin{itemize}
