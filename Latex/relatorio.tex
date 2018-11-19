@@ -1,5 +1,6 @@
 \documentclass[titlepage]{article}
 \usepackage{graphicx}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
 \graphicspath{ {./figures/} }
 
 \begin{document}
@@ -23,7 +24,7 @@
         Several kind of problems in the computational area are originated from dealing with graphs an trying to extract information from them. A subset of this area is finding a Minimum Spannig Tree (\emph{MST}) of a graph. The \emph{MST} is defined as the minimum set of edges of a graph that connect all the vertices and have the minimum sum of weights. Here we have an example of a graph with it's \emph{MST} highlighted.
     \begin{figure}[h]
         \includegraphics[width=\linewidth]{exampleMST}
-        \caption{Exemple of an Graph with it's MST costing 110}
+        \caption{Example of an Graph with it's MST costing 110\label{fig:inp1}}
     \end{figure}
     \paragraph{}
         To resolve that problem it was given some information about the graphs that would be used. All of them are planar graphs, in other words, they doesn't have any edges that are crossing each other, and they have to be undirected, that means that for any vertices connected $\{\alpha , \beta\}$, the connection $\alpha \rightarrow \beta$ is the same as $\beta \rightarrow \alpha$. Furthermore, all existing edges have a weight (this don't need to respect triangular inequality) and the graph is connected ($\forall$ vertex $\nu_1$, $\exists$ a path to a vertex $\nu_2$).
@@ -41,7 +42,7 @@
         \begin{figure}[h]
             \begin{center}
                 \includegraphics[width=0.6\textwidth]{imageinput}
-                \caption{Visualization of input numbers}
+                \caption{Visualization of input numbers\label{fig:inp2}}
             \end{center}
         \end{figure}
         \begin{figure}[h]
@@ -59,7 +60,7 @@
         \begin{figure}[h]
             \begin{center}
                 \includegraphics[width=0.6\textwidth]{terminaloutput}
-                \caption{Output if the graph in Figure 2 was used as input}
+                \caption{Output if the graph in Figure \ref{fig:inp1} was used as input}
             \end{center}
         \end{figure}
     \section{The Program}
@@ -84,27 +85,140 @@
         \paragraph{}
         The graph is formed by ${Vertices \cup Edges}$ structures. An $edge$ contain an integer to store it's cost and an array with size of 2, to store the vertices that it is connecting. A vertex contain an integer that represent his $id$ (an identifier) and a list of adjacency that carry pointers to edges that this vertice has. The functions that operates in this structures are:
         \begin{itemize}
-            \item Read\_Input\_Graph: Read a file with a matrix of adjacency and returns an vector of $vertices$ with all information of the file stored;
-            \item Print\_Graph:\ Takes a vector of $vertices$ as input and print all vertices and what connection each one of them have;
-            \item Print\_Output\_File: Print the information in the format that it was especifed before;
             \item MST\_Prim: The implementation of the \emph{Prim's algorithm};
             \item Path\_Cost\_List: Calculate the total path cost of a list of $Edges$;
             \item Path\_Cost\_Array: Calculate the total path cost of an array of $Edges$;
-            \item Free\_Graph: Free the space that was allocated in the vector of $vertices$
+            \item Free\_Graph: Free the space that was allocated in the vector of $vertices$;
+            \item Order\_Edge\_Array: Receives an array of $edges$ and sort the items in it according to the especifications of the problem; 
         \end{itemize}
         \paragraph{}
         The \emph{ADT} of List is formed by a structure called List that have an integer representing it's length and pointers to structures $cel$'s. This structure $cel$ is the one that actually holds the information that the list is storing. Besides that, this \emph{ADT} has the following functions:
         \begin{itemize}
             \item CreateList: Allocates space for a new List;
-            \item ListVaviz: Check if a list has any information inside of it;
+            \item ListVazia: Check if a list has any information inside of it;
             \item InsertStart: Insert an element in the start of the list;
             \item InsertEnd: Insert an element in the end of a list;
             \item AccessElement: Return the $index$ element of the list;
-            \item RemoveStar: Remove an element from the start of the list;
+            \item RemoveStart: Remove an element from the start of the list;
             \item RemoveEnd: Remove an element from the end of the list;
             \item FreeList: Liberate the space allocated by the list and all the elements inside of it; 
         \end{itemize}
+        \paragraph{}
+        Lastly, the functions of module \emph{Inout.c} that read input information, store it in memory, and print output details on a file and in terminal:
+        \begin{itemize}
+            \item Print\_Output\_File: Print the information in the format that it was especifed before;
+            \item Read\_Input\_Graph: Read a file with a matrix of adjacency and returns an vector of $vertices$ with all information of the file stored;
+            \item Print\_Graph:\ Takes a vector of $vertices$ as input and print all vertices and what connection each one of them have;
+            \item Print\_Output\_Terminal: Receives the information collected by the other functions and print the information necessary in terminal;
+        \end{itemize}
+        \subsection{Prim's algorithm}
+        \paragraph{}
+        In this section will be discussed about the most important function in the program, the \emph{MST\_Prim}. Prim's algorithm try to find best locally optimal solution and expand the area where it's acting. It is used find minimum spanning trees on a undirected graph, meaning that it's possible to use in this problem. The algorithm operates by storing the vertices that were already visited, and one at a time visiting every vertice with the best path possible, until every vertice is visited. Here we have a pseudocode to sumarize what was said.
+        \begin{algorithm}[h]
+            \SetAlgoLined
+            Create a set $mstKeys$ to store the integer values\;
+            Create a set $expVert$ to keep track of what vertices were already explored\;
+            Initializate all items of $mstKeys$ with infinite values\;
+            Initializate all items of $expVert$ with a "not explored" status\;
+            $mstKeys$[Start Value] = 0\;
+            \While{Any vertice is not explored\label{primLoop}}{
+            Find a vertex $\upsilon$ that has minimum key from $mstKeys$ and was not explored\;
+            Explore $\upsilon$\;
+            Update the key values from every vertice adjacent of $\upsilon$ that has the connection cost smaller than the last key\;
+            }
+            \caption{Prim's Algorithm\label{Prim}}
+        \end{algorithm}
+        \paragraph{}
+        Even though this algorithm is pretty simple, it's very powerfull. Knowing that in every iteration of the loop in line \ref{primLoop} a new vertex from the graph is explored, it can be deducted that this loop will iterate $\eta$ times, being $\eta$ the number of vertices in the graph.
+        \paragraph{Example} 
+        For the pourpose of demonstration of what the algorithm is doing, we can use the graph in image \ref{fig:inp1} as an example. First some vertex is picked as a start point to Initializate the algorithm. In this example the vertex $0$ was chosen, so it's key value is $0$, and the rest of the vertices are $\infty$:
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{./primexp/exp1}
+                \caption{First step of Prim's algorithm}
+            \end{center}
+        \end{figure}
+        \paragraph{}
+        Now, the smaller key that it's vertex is not explored is 0. So this vertex is "explored" and all the keys of vertices adjacent of it are updated.
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{./primexp/exp2}
+                \caption{Updating keys of adjacent vertices}
+            \end{center}
+        \end{figure}
+        \paragraph{}
+        With this, the key of vertex $1$ and $2$ is now 9 and 72, respectively. So, again a vertex with smaller key that is not explored is chosen, and then the process repeat until all of the vertices are explored.
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{./primexp/exp3}
+                \caption{Vertex $1$ is chosen}
+            \end{center}
+        \end{figure}
+        \begin{figure}[h]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{./primexp/exp4}
+                \caption{Keys of vertices adjacent to $1$ are updated}
+            \end{center}
+        \end{figure}
+        \begin{figure}[h!]
+            \begin{center}
+                \includegraphics[width=0.4\textwidth]{./primexp/exp5}
+                \caption{Final result after the process is repeated 6 times}
+            \end{center}
+        \end{figure}
         \subsection{The Complexity}
+        \paragraph{}
+        To analyze the complexity of the program first some notations will be created to facilitate this process. When making reference to lists or arrays, it's length will be represented by the letter $n$. For graphs, the number of vertices in it will be represented by the symbol $\nu$ and the number of edges will be $\mu$.
+        \paragraph{}
+        In module \emph{List.c} we have some functions that operates in constant time, $\mathcal{O}(1)$, because the just make operations of assignment of values and allocation of memory. This functions are: CreateList, ListVazia, InsertStart, InsertEnd, RemoveStart, RemoveEnd. Still in this module, exist some functions that have complexity $\mathcal{O}(n)$: AccessElement and FreeList. AccessElement makes a sequencial search for a element in the list, so it's best case is $\Omega(1)$, but in the worst case, where it would have to search in the entire list for the element, is $\mathcal{O}(n)$. FreeList pass through entire list freeing the space allocated, so it's complexity is $\Theta(n)$, because the best and worst case are the same.
+        \paragraph{}
+        For the module \emph{Grafo.c}, the functions that make operations just one time on the entire structure that is passed to them are: Path\_Cost\_List, Path\_Cost\_Array so its complexities are $\mathcal{O}(n)$. 
+        \paragraph{} 
+        The function Free\_Graph, has not a straight foward analysis that the other functions had. For every vertice in the graph, the function free all data in list of adjacency of this vertice and in the end free the array of vertices. Knowing that the amount of edges that are stored are the double from the actually existing edges, because the characteristic of the graph being undirected, the total amount of free operations that this function will do is $2\mu+1$, so the complexity of the functions depends linearly on the number of edges of the graph. Concluding, it's complexity is $\mathcal{O}(\mu)$.
+        \paragraph{}
+        The next function to be analised in this module is Order\_Edge\_Array. It takes as parameter an array of edges and sort its elements in descending order. The method used were an insertion sort, with a single diference that, because every edge has two elements to be sorted with the first being the smaller and having more weight on the sorting order. Here it's showed the algorithm used.
+        \begin{algorithm}[h]
+            Let $\omega$ = $\infty$\;
+            Let an $ComparisonValue_n$ for an $\mu_n$ edge be equal to:
+            $(\nu_{n1} \times \omega) + \nu_{n2}$\;
+            \SetAlgoLined
+            \For{every edge $\mu$ from the parameter array}{
+            \If{First vertex $\nu_1$ is greater than the second vertex $\nu_2$ of $\mu$ }{
+                Swap $\nu_1$ and $\nu_2$\;
+            }
+            \While{$ComparisonValue_n$ is smaller than $ComparisonValue_{n-1}$}{
+                Swap $\mu_n$ and $\mu_{n-1}$\;
+            }
+            }
+            \caption{Insertion sort with two keys values\label{Insertsort}}
+        \end{algorithm}
+    \paragraph{}
+    The lines 2 and 3 of Algorithm \ref{Insertsort} are creating a method to compare diferent edges even if they have two diferent values. The $if$ statment on line 4 is there to be sure that the second vertex of the edge is always greater than the first. Now, the loop "While" on line 7 have a worst case of doing the swaps $n$ times, on the case of the last item being the smallest value of the set. Knowing that, complexity of this function, that operate $n$ times and have another loop inside of it with a worst case of $n$, is $\mathcal{O}(n^2)$.
+    \paragraph{MST\_Prim}
+    Before starting the main loop that actually "explore" the vertices of the graph, in line 2 and 3 of Algorithm \ref{Prim} are the initilization some auxiliar variables. After noticing that this initialization needs to pass through all elements of the array of "Keys" and "Exploration" it can be concluded that this part alone of the algorithm have complexity $\mathcal{O}(\nu)$.
+    \subparagraph{}
+    Now, entering in the loop of line \ref{primLoop} that, as discussed before occurs $\nu$ times, it is separeted in three main tasks. The first of them, that is searching for the minimum key, has complexity $\mathcal{O}(\nu)$ because the elements are stored in an array and to be sure that an element is the smallest, every element of the array needs to be compared to it. The second tasks, exploring a vertex, has complexity $\mathcal{O}(1)$ this is only setting a value in the array of "explored" vertices. The last part, that is deciding if the key value have to be updated after comparing it to the edge cost of vertices around the vertex that is being explored, have some a inductive way of analizing. It can't be known how many connection every vertex has, but, knowing that this part will be executed for every vertex of the graph, it can be concluded that in overall there will be $\mu$ comparisons.
+    \subparagraph{}
+    With this information, the total complexity of the algorithm is the sum of the partial complexities calculated before. So, we have:
+    $$
+        Complexity(Prim's Algorithm) = \mathcal{O}((2 \times \nu) + \nu \times \nu + \nu \times 1 + \mu)
+    $$
+    $$
+        = \mathcal{O}(\nu^2 + \mu)
+    $$
+    $$ 
+        = \mathcal{O}(\nu^2)
+    $$
+    \subparagraph{}
+    It's possible to discart the $\mu$ part because in terms of complexity, $\nu^2$ is expected to be much greater the $\mu$.
+    \paragraph{Input and Output module}
+    Going from the simplest function to the most complex function in this module:
+    \begin{itemize}
+        \item Print\_Output\_Terminal: only print the parameters in terminal, so its complexity is $\mathcal{O}(1)$;
+        \item Print\_Output\_File: $\mathcal{O}(\nu^2)$, because it have to order $\nu-1$ edges, using Order\_Edge\_Array metioned before, and then print them on a output file;
+        \item Print\_Graph That: $\mathcal{O}(\nu \times \mu)$, because it has to print every vertex and connection of it;
+        \item Read\_Input\_File: $\mathcal{O}(\nu^2)$, because it reads an square matrix of adjacency with $\nu^2$ elements and store its data in memory;
+    \end{itemize}
     \section{Appraising the algorithm}
     \section{Software execution}
     
@@ -120,10 +234,10 @@
 
     \begin{description}
         \item[Function1] BBla bla
-        \item[Function2] Blol blo 
+        \item[Function2] Blol bl 
     \end{description}
     
-    % lr -esqerda, cr centro
+    % lr -esqerda, cr cetro
     \begin{tabular}{lr}
         BLU & BLE\\
         XU & XE\\

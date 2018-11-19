@@ -33,11 +33,7 @@ int main(int argc, char const *argv[]){
     bestCost = Path_Cost_Array(bestPath, graphSize - 1);
 
     /* Printing mesages on console */
-    printf("MST com custo: %d\n", bestCost);
-    printf("Economia vs malha totalmente conexa: %d\n", allCost - bestCost);
-    printf("MST ");
-    if(multiplePaths == True)printf("não ");
-    printf("é única\n");
+    Print_Output_Terminal(bestCost, allCost, multiplePaths);
 
     /* Priting information on output file */
     Print_Output_File("output.txt", bestPath, graphSize - 1);

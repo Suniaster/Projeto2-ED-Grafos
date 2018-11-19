@@ -9,4 +9,4 @@ Grafo.o: Grafo.c
 Inout.o: Inout.c
 	gcc -g -c Inout.c
 clean: 
-	rm main.o Lista.o Grafo.o Inout.o mst
+	rm -f main.o Lista.o Grafo.o Inout.o mst

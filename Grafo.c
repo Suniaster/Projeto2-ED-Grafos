@@ -2,45 +2,6 @@
 #include <stdlib.h>
 #include "Grafo.h"
 
-/*  Depth-Fisrt-Search:
-    This function find the first valid path that connect some certain vertice to all others.
-    Take as parameter:
-        -> A vector of vertices that contains all the graph. "toSearch"
-        -> A vector of integers that has the same lenght of the vector of vertices "visited"
-            - It is used for store if some vertice was visited or not
-        -> An integer that represents what vertice is being searched "searching"
-        -> An integer to change between starting paths in search "startingConnection"
-    Returns the totalCost of taking this path.
-*/
-int DFS(Vert* toSearch, int* visited, int searching, int startingConnection){
-    /* Mark as Visted when pass through this particular vertice */
-    visited[searching] = VISITED;
-    printf("%d\n", toSearch[searching].id);
-
-    /* Variable to return the total cost of using the path it will create */
-    int totalCost = 0 ;
-
-    /* For each one of the connections this vertice have with other vertices */
-    int connection;
-    for(int iterator = 0 ;iterator < toSearch[searching].adj->length ; iterator++){
-        
-        connection = (startingConnection + iterator)%toSearch[searching].adj->length;
-        Edge* willSearch;
-        willSearch = AccessElement(toSearch[searching].adj, connection);
-
-        /* If the path->cost equal to 0, the path actually don't exist */
-        /* If the previous statement is true or the vertice was already visited, pass to next vertice */
-        if(willSearch->cost == 0 || visited[willSearch->path[DESTINATION]] == VISITED){
-            continue;
-        }
-        totalCost += willSearch->cost;
-
-        /* Search again in the first found valid connection */
-        totalCost += DFS(toSearch, visited, willSearch->path[DESTINATION], 0);
-    } 
-    return totalCost;
-}
-
 /*  A function that takes a List of Edges as input and return the sum of the costs */
 int Path_Cost_List(List* toCalculate){
     int totalCost = 0;
@@ -69,6 +30,36 @@ void Free_Graph(Vert* toLiberate, int size){
     free(toLiberate);
 }
 
+void Order_Edge_Array(Edge* toReturn, int size){
+    int swap;
+    int now, prev;
+    Edge swapEdge;
+    for(int iterator = 0; iterator < size; iterator++){
+        /* Ordering elements in toReturn array */
+        /* If Origin is less than the Destinantion, swap it's values */
+        if(toReturn[iterator].path[ORIGIN] > toReturn[iterator].path[DESTINATION]){
+            swap = toReturn[iterator].path[ORIGIN];
+            toReturn[iterator].path[ORIGIN] =  toReturn[iterator].path[DESTINATION];
+            toReturn[iterator].path[DESTINATION] = swap;
+        }
+
+        /* InsertionSort to be certain that the element is in the correct place */
+        /* The edges have to be in order, with the first edge having more */
+        for(int i=iterator; i>0 ;i--){
+            now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
+            prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
+            while(now < prev){
+                swapEdge = toReturn[i];
+                toReturn[i] =  toReturn[i-1];
+                toReturn[i-1] = swapEdge;
+                /* Recalculating values */ 
+                now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
+                prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
+            }
+        }
+    }
+}
+
 /* Algorithm of Prim's to find a Minimum Sppaning Tree:
     It take as parameter:
     -> A vector of vertices that are representing the graph
@@ -87,7 +78,8 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         printf("Problem with parameters in MST_PRIM()\n");
         return NULL;
     }
-    /* First is created a vector with the same size of Vertices Vector to store key values and start all of them with infinite*/ 
+    /* First is created a vector with the same size of Vertices Vector to store key values 
+        and start all of them with infinite*/ 
     int* mstKeys;
     mstKeys = (int*)malloc(size*sizeof(int));
     
@@ -101,11 +93,12 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     }
     
     /* The key of the parameter entry is 0 */
-    /* ~This isn't actually necessary, but with it is possible for the function to return diferents MST's*/
+    /* ~This isn't actually necessary, but with it is possible for 
+    the function to return diferents MST's*/
     mstKeys[startPoint] = 0;
 
     /* Auxiliar variables */
-    Vert* isFound;                      // Auxliar to check if some vertex is already in the set of vertices explored
+    Vert* isFound;      // Auxliar to check if some vertex is already in the set of vertices explored               
     Edge* neighbors;                    // Auxiliar to iterate through a list of Edges
     Edge* PATH;                         // Used to find the last Edge that was put in the MST
     Edge* addPATH;                      // Stores a copy of PATH variable
@@ -122,8 +115,8 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     /* For every vertex in the vector toSearch */
     for(int iterator=0; iterator < size ; iterator++){
         
-        /* Pick a vertex toAdd which is not there in exploredVertices and has minimum key value.
-           "Choose the best vertex to be explored"
+        /* Pick a vertex toAdd which is not there in exploredVertices and has minimum 
+            key value. "Choose the best vertex to be explored"
         */
         minKey=INF;
         for(int search=0; search< size; search++){
@@ -147,38 +140,12 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         */
         exploredVertices[toAdd] = VISITED;
 
-        /* "Adding the last added edge to the list that will be returned" */
-        /*  To know what Edge is been used pass through vertices:
-            Use the last vertex that was put on the path List
-            "newInpPath" to:
-            For each adjacent vertex of him, find the one that has minimun value and
-            is already on the path list.
-            This way, we can know from what vertex the last vertex that was put
-            in the path list come from
-         */
-        minKey = INF;
-        for(int i=0;i < toSearch[toAdd].adj->length;i++){
-            neighbors = AccessElement(toSearch[toAdd].adj, i);
-            hasAlready = False;
-
-            if(exploredVertices[neighbors->path[DESTINATION]] == VISITED) hasAlready = True;
-
-            if(neighbors->cost<=minKey && hasAlready == True){
-                PATH = neighbors;
-                minKey = neighbors->cost;
-            }
-        }
-        if(minKey != INF){
-            /* Inserting element into returning array */
-            toReturn[iterator-1] = *PATH;
-
-        }
-
         /*  Update key value of all adjacent vertices of toAdd. To update the key values, 
             iterate through all adjacent vertices. For every adjacent vertex n, if weight of 
             edge of this neighbor is less than the previous key value of neighbor, 
             update the key value as weight of the edge to this neighbor
         */
+        minKey = INF;
         for(int n=0; n<toSearch[toAdd].adj->length;n++){
             neighbors = AccessElement(toSearch[toAdd].adj,n);
 
@@ -195,9 +162,28 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
             }
 
             /* Update the cost of neighbours if it's necessary */
-            if(neighbors->cost < mstKeys[neighbors->path[DESTINATION]]){
+            if(neighbors->cost < mstKeys[neighbors->path[DESTINATION]] && hasAlready == False){
                 mstKeys[neighbors->path[DESTINATION]] = neighbors->cost;
             }
+            
+            /* "Adding the last added edge to the list that will be returned" */
+            /*  To know what Edge is been used pass through vertices:
+                Use the last vertex that was put on the path List
+                "newInpPath" to:
+                For each adjacent vertex of him, find the one that has minimun value and
+                is already on the path list.
+                This way, we can know from what vertex the last vertex that was put
+                in the path list come from
+            */
+            if(neighbors->cost<=minKey && hasAlready == True){
+                PATH = neighbors;
+                minKey = neighbors->cost;
+            }
+        }
+        if(minKey != INF){
+            /* Inserting element into returning array */
+            toReturn[iterator-1] = *PATH;
+
         }
 
     }

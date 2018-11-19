@@ -27,9 +27,9 @@ typedef struct Edge{
 Vert* Read_Input_Graph(const char* name, int *VectorLength, List** allEdges);
 void Print_Graph(Vert* toPrint,int size);
 void Print_Output_File(const char* name, Edge* toPrint, int size);
+void Print_Output_Terminal(int bestCost, int totalCost, int multiplePaths);
 
 /* Graph management Functions */
-int DFS(Vert* toSearch, int* visited, int searching, int startingConnection);
 Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths);
 int Path_Cost_List(List* toCalculate);
 int Path_Cost_Array(Edge* toCalculate, int size);

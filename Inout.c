@@ -91,36 +91,6 @@ void Print_Graph(Vert* toPrint,int size){
     }
 }
 
-void Order_Edge_Array(Edge* toReturn, int size){
-    int swap;
-    int now, prev;
-    Edge swapEdge;
-    for(int iterator = 0; iterator < size; iterator++){
-        /* Ordering elements in toReturn array */
-        /* If Origin is less than the Destinantion, swap it's values */
-        if(toReturn[iterator].path[ORIGIN] > toReturn[iterator].path[DESTINATION]){
-            swap = toReturn[iterator].path[ORIGIN];
-            toReturn[iterator].path[ORIGIN] =  toReturn[iterator].path[DESTINATION];
-            toReturn[iterator].path[DESTINATION] = swap;
-        }
-
-        /* InsertionSort to be certain that the element is in the correct place */
-        /* The edges have to be in order, with the first edge having more */
-        for(int i=iterator; i>0 ;i--){
-            now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
-            prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
-            while(now < prev){
-                swapEdge = toReturn[i];
-                toReturn[i] =  toReturn[i-1];
-                toReturn[i-1] = swapEdge;
-                /* Recalculating values */ 
-                now = toReturn[i].path[ORIGIN]*INF + toReturn[i].path[DESTINATION];
-                prev = toReturn[i-1].path[ORIGIN]*INF + toReturn[i-1].path[DESTINATION];
-            }
-        }
-    }
-}
-
 /*  Function to print the file with edges information 
     Takes as input:
         -> Name of the file ("name");
@@ -142,4 +112,14 @@ void Print_Output_File(const char* name, Edge* toPrint, int size){
 
     /* Closing File */
     fclose(printing);
+}
+
+/* Printing output information about the mst cost, how much it's better in
+relation to all edges in the graph, and if exists more than one path */
+void Print_Output_Terminal(int bestCost, int totalCost, int multiplePaths){
+    printf("MST com custo: %d\n", bestCost);
+    printf("Economia vs malha totalmente conexa: %d\n", totalCost - bestCost);
+    printf("MST ");
+    if(multiplePaths == True)printf("não ");
+    printf("é única\n");
 }
