@@ -24,7 +24,7 @@ int main(int argc, char const *argv[]){
     /* Using Prim's algorithm to find the first best MST in the graph */
     /* Best path is a array of edges that contain only the necessary edges in the best path */
     Edge* bestPath;
-    bestPath = MST_Prim(graph, 0, graphSize, &multiplePaths);
+    bestPath = MST_Prim(graph, graphSize, &multiplePaths);
 
     /* Calculating the path costs */
     int allCost;

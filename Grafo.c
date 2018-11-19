@@ -60,10 +60,38 @@ void Order_Edge_Array(Edge* toReturn, int size){
     }
 }
 
+int BestStartPoint(Vert* toSearch, int size){
+    int minValue = INF;
+    int minIndex;
+    int lastValue;
+    int check;
+    Edge* looking;
+    for(int i=0; i < size; i++){
+        check = True;
+        looking = AccessElement(toSearch[i].adj, 0);
+        lastValue = looking->cost;
+        for(int n=1; n < toSearch[i].adj->length; n++){
+            looking = AccessElement(toSearch[i].adj, n);
+            if(looking->cost == lastValue)check=False;
+
+            lastValue = looking->cost;
+        }
+        if(check == True){
+            return i;
+        }
+        else{
+            if(lastValue < minValue){
+                minIndex = i;
+                minValue = lastValue;
+            }
+        }
+    }
+    return minIndex;
+}
+
 /* Algorithm of Prim's to find a Minimum Sppaning Tree:
     It take as parameter:
     -> A vector of vertices that are representing the graph
-    -> One starting point (it's to really necessary, but inside the function it's explained)
     -> The amount of vertices in the graph
     -> An variable to return by reference if exist more than one Mst
 
@@ -71,18 +99,14 @@ void Order_Edge_Array(Edge* toReturn, int size){
     the function will return a array ,with length size-1, of edges that are used in to make 
     the mst. 
  */
-Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
+Edge* MST_Prim(Vert* toSearch ,int size, int* multiplePaths){
 
-    /* If the starting parameter is not valid, stop the function*/ 
-    if(startPoint > size-1){
-        printf("Problem with parameters in MST_PRIM()\n");
-        return NULL;
-    }
     /* First is created a vector with the same size of Vertices Vector to store key values 
         and start all of them with infinite*/ 
     int* mstKeys;
+    int *keyTimes;
     mstKeys = (int*)malloc(size*sizeof(int));
-    
+    keyTimes = (int*)malloc(size*sizeof(int));
     /* Variable to store vertices that were already explored */
     int* exploredVertices = malloc(size*sizeof(int));
 
@@ -90,8 +114,12 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
     for(int i=0;i<size;i++){
         exploredVertices[i]=NOT_VISITED;
         mstKeys[i]=INF;
+        keyTimes[i] = 1;
     }
     
+    int startPoint;
+    startPoint = BestStartPoint(toSearch,size);
+
     /* The key of the parameter entry is 0 */
     /* ~This isn't actually necessary, but with it is possible for 
     the function to return diferents MST's*/
@@ -159,12 +187,13 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
                 it means that exist another MST;
             */
             if(neighbors->cost == mstKeys[neighbors->path[DESTINATION]] && hasAlreadyVisited == False){
-                *multiplePaths = True;
+                keyTimes[neighbors->path[DESTINATION]]++;
             }
 
             /* Update the cost of neighbours if it's necessary */
             if(neighbors->cost < mstKeys[neighbors->path[DESTINATION]] && hasAlreadyVisited == False){
                 mstKeys[neighbors->path[DESTINATION]] = neighbors->cost;
+                keyTimes[neighbors->path[DESTINATION]] = 1;
             }
             
             /* "Adding the last added edge to the list that will be returned" */
@@ -188,6 +217,11 @@ Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths){
         }
 
     }
+    for(int i=0;i<size;i++){
+        if(keyTimes[i]>1)*multiplePaths = True;
+    }
+
+    free(keyTimes);
     free(exploredVertices);
     free(mstKeys);
     return toReturn;

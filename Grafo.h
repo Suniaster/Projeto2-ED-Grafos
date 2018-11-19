@@ -30,7 +30,8 @@ void Print_Output_File(const char* name, Edge* toPrint, int size);
 void Print_Output_Terminal(int bestCost, int totalCost, int multiplePaths);
 
 /* Graph management Functions */
-Edge* MST_Prim(Vert* toSearch, int startPoint ,int size, int* multiplePaths);
+Edge* MST_Prim(Vert* toSearch, int size, int* multiplePaths);
+int BestStartPoint(Vert* toSearch, int size);
 int Path_Cost_List(List* toCalculate);
 int Path_Cost_Array(Edge* toCalculate, int size);
 void Order_Edge_Array(Edge* toReturn, int size);
