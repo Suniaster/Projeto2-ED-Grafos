@@ -14,7 +14,7 @@
 #define GRAFO
 
 typedef struct Vertice{
-    int id;                   // Name that represents a Vertice
+    int id;                   // Name that represents a Vertex
     List* adj;               // List of Adjacency. It contains pointer to Edges that are linking this vertice to others 
 }Vert;
 

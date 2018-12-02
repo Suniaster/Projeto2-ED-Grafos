@@ -60,33 +60,39 @@ void Order_Edge_Array(Edge* toReturn, int size){
     }
 }
 
+/* Trying to find the best vertex to start Prim's algorithm */
 int BestStartPoint(Vert* toSearch, int size){
+    /* Variable declarations */
     int minValue = INF;
+    int LocalMIN = INF;
+    int minTimes =0;
     int minIndex;
     int lastValue;
     int check;
     Edge* looking;
+
+    /* Iterate through all vertices and them neighbors to find
+    the one that hasn't it's minimum edge duplicated  */
     for(int i=0; i < size; i++){
         check = True;
-        looking = AccessElement(toSearch[i].adj, 0);
-        lastValue = looking->cost;
-        for(int n=1; n < toSearch[i].adj->length; n++){
+        LocalMIN = INF;
+        minTimes =0;
+        for(int n=0; n < toSearch[i].adj->length; n++){
             looking = AccessElement(toSearch[i].adj, n);
-            if(looking->cost == lastValue)check=False;
-
-            lastValue = looking->cost;
-        }
-        if(check == True){
-            return i;
-        }
-        else{
-            if(lastValue < minValue){
-                minIndex = i;
-                minValue = lastValue;
+            if(LocalMIN == looking->cost){
+                minTimes++;
+            }
+            if(looking->cost < LocalMIN){
+                LocalMIN = looking->cost;
+                minTimes=0;
             }
         }
+        if(minTimes==0){
+            return i;
+        }
     }
-    return minIndex;
+    /* If it did not find a good start, the start point will be 0 */
+    return 0;
 }
 
 /* Algorithm of Prim's to find a Minimum Sppaning Tree:

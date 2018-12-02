@@ -90,6 +90,7 @@
             \item Path\_Cost\_Array: Calculate the total path cost of an array of $Edges$;
             \item Free\_Graph: Free the space that was allocated in the vector of $vertices$;
             \item Order\_Edge\_Array: Receives an array of $edges$ and sort the items in it according to the especifications of the problem; 
+            \item BestStartPoint: Finds the best vertice to start the algorithm
         \end{itemize}
         \paragraph{}
         The \emph{ADT} of List is formed by a structure called List that have an integer representing it's length and pointers to structures $cel$'s. This structure $cel$ is the one that actually holds the information that the list is storing. Besides that, this \emph{ADT} has the following functions:
@@ -194,6 +195,8 @@
         \end{algorithm}
     \paragraph{}
     The lines 2 and 3 of Algorithm \ref{Insertsort} are creating a method to compare diferent edges even if they have two diferent values. The $if$ statment on line 4 is there to be sure that the second vertex of the edge is always greater than the first. Now, the loop "While" on line 7 have a worst case of doing the swaps $n$ times, on the case of the last item being the smallest value of the set. Knowing that, complexity of this function, that operate $n$ times and have another loop inside of it with a worst case of $n$, is $\mathcal{O}(n^2)$.
+    \paragraph{}
+    BestStartPoint pass through all vertices trying to find one that it's edges with minimum cost it's not duplicated. On the worst case it has to pass through all vertices, so the complexity of this function is $\mathcal{O}(n)$.
     \paragraph{MST\_Prim}
     Before starting the main loop that actually "explore" the vertices of the graph, in line 2 and 3 of Algorithm \ref{Prim} are the initilization some auxiliar variables. After noticing that this initialization needs to pass through all elements of the array of "Keys" and "Exploration" it can be concluded that this part alone of the algorithm have complexity $\mathcal{O}(\nu)$.
     \subparagraph{}
@@ -261,28 +264,34 @@
     \end{figure}
     \paragraph{}
     With this we can see that the input changed so that now MST is unique, and the MST cost is equal to $2\times\omega$ as it were expected.
+    \paragraph{}
+    For the last example it was used a larger graph to show that the algorithm can be used on diferent size of graphs. It was built an graph with 62 vertices, that satisfy the condition of being connected and plain. Figure 12 ilustrates it's visualization.
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=0.6\textwidth]{biggraph}
+            \caption{62 vertices graph}
+        \end{center}
+    \end{figure}
+    \paragraph{}
+    When the program is ran with this graph as input it's possible to see that it's MST is not unique and the economy that it create is less than half of the full connected graph.
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{bigoutput}
+            \caption{Output of the graph in Figure 12}
+        \end{center}
+    \end{figure}
+    \paragraph{}
+    With this, it's possible to see that the algorithm is efficient with real world problem solving and can be used on multiple areas of knowledge. 
     \section{Software execution}
+    \paragraph{}
+    For the execution of the software it has been created a Makefile to compile every module. The executable created it's named "mst" and for the execution it's necessary the input to be passed as the argument.
+    $$
+    ./mst <inputfile>
+    $$ 
+    \paragraph{}
+    As it was explained before the output comes on terminal and in a output file. For default the output file is named as "output.txt". An example of execution:
+    \paragraph{}
+    ./mst input.txt
     
-    \begin{itemize}
-        \item First item
-        \item Second item
-    \end{itemize}
-
-    \begin{enumerate}
-        \item One
-        \item Two
-    \end{enumerate}
-
-    \begin{description}
-        \item[Function1] BBla bla
-        \item[Function2] Blol bl 
-    \end{description}
-    
-    % lr -esqerda, cr cetro
-    \begin{tabular}{lr}
-        BLU & BLE\\
-        XU & XE\\
-        THU & THA\\
-    \end{tabular}
 \end{document}  
 % \subsection\subsubsection\paragraph\subparagraph
